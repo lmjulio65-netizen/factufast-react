@@ -1,0 +1,349 @@
+/* ===================================================== */
+/* CONTENEDOR PRINCIPAL DE LA PAGINA SERVICIOS */
+/* ===================================================== */
+
+.servicios-container{
+
+min-height:100vh; /* hace que la página ocupe toda la pantalla */
+
+background-size:cover; /* la imagen llena la pantalla */
+
+background-position:center; /* centra la imagen */
+
+background-repeat:no-repeat;
+
+font-family:Arial, Helvetica, sans-serif;
+
+position:relative;
+
+color:#EAEAEA; /* color general del texto */
+
+}
+
+
+
+/* ===================================================== */
+/* CAPA OSCURA SOBRE LA IMAGEN */
+/* ===================================================== */
+/* esto oscurece el fondo para que el texto se lea mejor */
+/* si quieres el fondo más claro cambia 0.60 */
+/* si quieres más oscuro usa 0.75 */
+
+.servicios-container::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,0.60);
+
+z-index:0;
+
+}
+
+
+
+/* ===================================================== */
+/* HEADER SUPERIOR */
+/* ===================================================== */
+
+.header{
+
+background:#1A1A1A; /* color del header */
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:15px 40px;
+
+position:relative;
+
+z-index:1;
+
+border-bottom:1px solid #333;
+
+}
+
+
+
+/* ===================================================== */
+/* CONTENEDOR DEL LOGO Y TITULO */
+/* ===================================================== */
+
+.header-left{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+}
+
+
+
+/* ===================================================== */
+/* LOGO */
+/* ===================================================== */
+/* cambia el tamaño del logo aquí */
+
+.logo{
+
+width:80px;
+
+}
+
+
+
+/* ===================================================== */
+/* TITULO FACTUFAST */
+/* ===================================================== */
+
+.header h1{
+
+color:#C9BD86; /* dorado del sistema */
+
+font-size:28px;
+
+margin:0;
+
+letter-spacing:1px;
+
+}
+
+
+
+/* ===================================================== */
+/* SUBTITULO */
+/* ===================================================== */
+
+.header p{
+
+color:#ccc;
+
+font-size:20px;
+
+margin:0;
+
+}
+
+
+
+/* ===================================================== */
+/* BOTON SALIR */
+/* ===================================================== */
+/* si quieres bajarlo un poco agrega top:5px */
+
+.btn-exit img{
+
+width:80px;
+
+opacity:0.7;
+
+transition:0.3s;
+margin-top:3px;
+}
+
+
+
+/* efecto cuando pasas el mouse */
+
+.btn-exit img:hover{
+
+opacity:70;
+
+}
+
+
+
+/* ===================================================== */
+/* TITULO DE LA SECCION */
+/* ===================================================== */
+
+.intro{
+
+text-align:center;
+
+padding:50px 20px 20px 20px;
+
+position:relative;
+
+z-index:1;
+
+}
+
+
+
+/* TITULO PRINCIPAL */
+
+.intro h2{
+
+color:#C9BD86;
+
+margin-bottom:36px;
+
+font-size:30px;
+
+}
+
+
+
+/* TEXTO DESCRIPTIVO */
+.intro p{
+
+color:#e5e5e5;
+
+max-width:600px; /* controla el ancho del texto */
+
+margin:auto;
+
+line-height:1.6;
+
+font-size:15px;
+
+}
+
+
+/* ===================================================== */
+/* SECCION SERVICIOS */
+/* ===================================================== */
+
+.servicios{
+
+padding:40px 20px 70px 20px;
+
+position:relative;
+
+z-index:1;
+
+}
+
+
+
+/* ===================================================== */
+/* GRID DE TARJETAS */
+/* ===================================================== */
+/* controla espacio entre tarjetas */
+
+.servicios-grid{
+
+display:flex;
+
+justify-content:center;
+
+gap:40px;
+
+flex-wrap:wrap;
+
+}
+
+
+
+/* ===================================================== */
+/* TARJETAS */
+/* ===================================================== */
+
+.servicio-card{
+
+background:#2A2A2A; /* color tarjeta */
+
+padding:15px;
+
+border-radius:10px;
+
+width:220px;
+
+text-align:left;
+
+border:1px solid #333;
+
+/* detalle dorado elegante */
+
+border-left:3px solid #C9BD86;
+
+transition:0.3s;
+
+}
+
+
+
+/* animación cuando pasas el mouse */
+
+.servicio-card:hover{
+
+transform:translateY(-6px);
+
+border-left:3px solid #E8D9A5;
+
+box-shadow:0 8px 20px rgba(0,0,0,0.6);
+
+}
+
+
+
+/* ===================================================== */
+/* TITULO DE CADA TARJETA */
+/* ===================================================== */
+
+.servicio-card h3{
+
+color:#C9BD86;
+
+margin-bottom:10px;
+
+font-size:15px;
+
+}
+
+
+
+/* ===================================================== */
+/* LISTA DE SERVICIOS */
+/* ===================================================== */
+
+.servicio-card ul{
+
+padding-left:1px;
+
+color:#ddd;
+
+font-size:14px;
+
+line-height:1;
+
+}
+
+
+
+/* ===================================================== */
+/* FOOTER */
+/* ===================================================== */
+
+.footer-servicios{
+
+background:#111;
+
+text-align:center;
+
+padding:1px;
+
+color:#bbb;
+
+position:relative;
+
+z-index:1;
+
+font-size:13px;
+
+border-top:1px solid #333;
+
+}

@@ -1,0 +1,66 @@
+.gerente-container{
+padding:1px;
+background:#d9d0a5;
+min-height:100vh;
+}
+
+h2{
+text-align:center;
+margin-bottom:30px;
+}
+/* para el tamaño de las tablas  */
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th{
+background:#8a7a00;
+color:white;
+padding:10px;
+}
+
+td{
+padding:5px;
+text-align:center;
+border:1px solid #ddd;
+}
+
+tr:nth-child(even){
+background:#f2f2f2;
+}
+form{
+display:grid;
+grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+gap:10px;
+margin-bottom:20px;
+}
+
+form input{
+padding:8px;
+border:1px solid #ccc;
+border-radius:5px;
+width:100%;
+box-sizing:border-box;
+}
+
+form button{
+padding:10px;
+background:#8a7a00;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+.cards {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.card {
+  padding: 25px;
+  border-radius: 12px;
+  min-width: 220px;
+}
