@@ -17,10 +17,12 @@ import ClienteFacturas from './pages/ClienteFacturas';
 import ClienteLogin from './pages/ClienteLogin';
 import Clientes from './pages/Clientes';
 import Configuracion from './pages/Configuracion';
+import Creditos from './pages/Creditos';
 import Dashboard from './pages/Dashboard';
 import FacturaAnular from './pages/FacturaAnular';
 import Facturas from './pages/Facturas';
 import FacturaVista from './pages/FacturaVista';
+import Gastos from './pages/Gastos';
 import Gerente from './pages/Gerente';
 import Home from './pages/Home';
 import Inventario from './pages/Inventario';
@@ -31,6 +33,8 @@ import RecuperarClave from './pages/RecuperarClave';
 import RecuperarUsuario from './pages/RecuperarUsuario';
 import Reportes from './pages/Reportes';
 import Servicios from './pages/Servicios';
+import Terceros from './pages/Terceros';
+import VentasHistoricas from './pages/VentasHistoricas';
 
 function App() {
   return (
@@ -45,14 +49,12 @@ function App() {
         <Route path="/recuperar-usuario" element={<RecuperarUsuario />} />
         <Route path="/recuperar-clave"   element={<RecuperarClave />} />
 
-        {/* 🔒 Registro solo para gerente */}
         <Route path="/registro" element={
           <PrivateRoute rolPermitido="Gerente 1">
             <Register />
           </PrivateRoute>
         }/>
 
-        {/* 🚫 Sin permiso */}
         <Route path="/sin-permiso" element={
           <div style={{ textAlign:"center", marginTop:"100px" }}>
             <h2>🚫 No tienes permiso para ver esta página</h2>
@@ -70,8 +72,8 @@ function App() {
         }/>
 
         {/* 🧾 FACTURAS FUERA DEL PANEL */}
-        <Route path="/factura/:id"          element={<FacturaVista />} />
-        <Route path="/factura/anular/:id"   element={<FacturaAnular />} />
+        <Route path="/factura/:id"        element={<FacturaVista />} />
+        <Route path="/factura/anular/:id" element={<FacturaAnular />} />
 
         {/* 🧑‍💼 PANEL GERENTE */}
         <Route path="/gerente" element={
@@ -79,16 +81,20 @@ function App() {
             <DashboardLayout />
           </PrivateRoute>
         }>
-          <Route index                    element={<Gerente />} />
-          <Route path="dashboard"         element={<Dashboard />} />
-          <Route path="facturas"          element={<Facturas />} />
-          <Route path="listado-facturas"  element={<ListadoFacturas />} />
-          <Route path="productos"         element={<Productos />} />
-          <Route path="inventario"        element={<Inventario />} />
-          <Route path="reportes"          element={<Reportes />} />
-          <Route path="clientes"          element={<Clientes />} />
-          <Route path="configuracion"     element={<Configuracion />} />
-          <Route path="proveedores"       element={<Proveedores />} />
+          <Route path="ventas-historicas" element={<VentasHistoricas />} />
+          <Route index                   element={<Gerente />} />
+          <Route path="dashboard"        element={<Dashboard />} />
+          <Route path="facturas"         element={<Facturas />} />
+          <Route path="listado-facturas" element={<ListadoFacturas />} />
+          <Route path="productos"        element={<Productos />} />
+          <Route path="inventario"       element={<Inventario />} />
+          <Route path="reportes"         element={<Reportes />} />
+          <Route path="clientes"         element={<Clientes />} />
+          <Route path="configuracion"    element={<Configuracion />} />
+          <Route path="proveedores"      element={<Proveedores />} />
+          <Route path="gastos"           element={<Gastos />} />
+          <Route path="terceros"         element={<Terceros />} />
+          <Route path="creditos"         element={<Creditos />} />
         </Route>
 
         {/* 🧑‍💻 PANEL ADMINISTRADOR */}
@@ -97,14 +103,17 @@ function App() {
             <DashboardLayout />
           </PrivateRoute>
         }>
-          <Route index                    element={<Reportes />} />
-          <Route path="reportes"          element={<Reportes />} />
-          <Route path="facturas"          element={<Facturas />} />
-          <Route path="listado-facturas"  element={<ListadoFacturas />} />
-          <Route path="productos"         element={<Productos />} />
-          <Route path="inventario"        element={<Inventario />} />
-          <Route path="clientes"          element={<Clientes />} />
-          <Route path="proveedores"       element={<Proveedores />} />
+          <Route path="ventas-historicas" element={<VentasHistoricas />} />
+          <Route index                   element={<Reportes />} />
+          <Route path="reportes"         element={<Reportes />} />
+          <Route path="facturas"         element={<Facturas />} />
+          <Route path="listado-facturas" element={<ListadoFacturas />} />
+          <Route path="productos"        element={<Productos />} />
+          <Route path="inventario"       element={<Inventario />} />
+          <Route path="clientes"         element={<Clientes />} />
+          <Route path="proveedores"      element={<Proveedores />} />
+          <Route path="gastos"           element={<Gastos />} />
+          <Route path="creditos"         element={<Creditos />} />
         </Route>
 
         {/* 👨‍🔧 PANEL EMPLEADO */}
@@ -113,10 +122,10 @@ function App() {
             <DashboardLayout />
           </PrivateRoute>
         }>
-          <Route index            element={<Facturas />} />
-          <Route path="facturas"  element={<Facturas />} />
-          <Route path="clientes"  element={<Clientes />} />
-          <Route path="productos" element={<Productos />} />
+          <Route index              element={<Facturas />} />
+          <Route path="facturas"    element={<Facturas />} />
+          <Route path="clientes"    element={<Clientes />} />
+          <Route path="productos"   element={<Productos />} />
           <Route path="proveedores" element={<Proveedores />} />
           <Route path="inventario"  element={<Inventario />} />
         </Route>
