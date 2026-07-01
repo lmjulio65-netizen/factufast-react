@@ -1,205 +1,397 @@
-import React, {
-  useEffect,
-  useState,
-} from 'react';
-
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Facturas.css';
 
-function Facturas(){
-
+function Facturas() {
   const navigate = useNavigate();
 
-  const [productos,setProductos]         = useState([]);
-  const [clientes,setClientes]           = useState([]);
-  const [productosVenta,setProductosVenta] = useState([]);
-  const [cliente,setCliente]             = useState("");
-  const [clienteData,setClienteData]     = useState(null);
-  const [usuarioSesion,setUsuarioSesion] = useState({ id: null, nombre: "" });
+  const [productos, setProductos] = useState([]);
+  const [clientes, setClientes] = useState([]);
+  const [productosVenta, setProductosVenta] = useState([]);
+  const [cliente, setCliente] = useState('');
+  const [busquedaCliente, setBusquedaCliente] = useState('');
+  const [clienteData, setClienteData] = useState(null);
+  const [usuarioSesion, setUsuarioSesion] = useState({ id: null, nombre: '' });
+  const [cargando, setCargando] = useState(false);
+  const [guardando, setGuardando] = useState(false);
 
-  // ✅ Leer rol
-  const usuario  = JSON.parse(localStorage.getItem("usuario") || "{}");
-  const rol      = usuario.rol || "";
-  const esGerente = rol === "Gerente 1";
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  const rol = usuario.rol || '';
+  const esGerente = rol === 'Gerente 1';
 
-  useEffect(()=>{
-    cargarProductos();
-    cargarClientes();
+  useEffect(() => {
+    cargarDatosIniciales();
+
     setUsuarioSesion({
-      id:     usuario.id     || null,
-      nombre: usuario.nombre || ""
+      id: usuario.id || usuario.id_usuario || null,
+      nombre: usuario.nombre || usuario.nombre_usuario || '',
     });
-  },[]);
+  }, []);
 
-  const cargarProductos = async()=>{
-    const res  = await fetch("http://localhost/factufast-api/inventario/listar.php");
-    const data = await res.json();
-    setProductos(data.inventario || []);
-  };
+  const cargarDatosIniciales = async () => {
+    setCargando(true);
 
-  const cargarClientes = async()=>{
-    const res  = await fetch("http://localhost/factufast-api/clientes/listar.php");
-    const data = await res.json();
-    setClientes(data || []);
-  };
-
-  const formato = (num) => Number(num || 0).toLocaleString("es-CO");
-
-  const agregarProducto=(id)=>{
-    if(!id) return;
-    const prod = productos.find(p=>p.id_productos == id);
-    if(!prod) return;
-    if(prod.stock <= 0){ alert("Producto sin stock"); return; }
-    const existe = productosVenta.find(p=>p.id_productos == id);
-    if(existe){ alert("Producto ya agregado"); return; }
-    setProductosVenta([...productosVenta, {
-      id_productos:    prod.id_productos,
-      nombre_producto: prod.nombre_producto,
-      precio:          Number(prod.precio_venta),
-      iva:             Number(prod.iva || 0),
-      stock:           Number(prod.stock),
-      cantidad:        1,
-      subtotal:        Number(prod.precio_venta)
-    }]);
-  };
-
-  const cambiarCantidad=(id,cantidad)=>{
-    setProductosVenta(productosVenta.map(p=>{
-      if(p.id_productos == id){
-        if(cantidad <= 0)    return { ...p, cantidad:1, subtotal:p.precio };
-        if(cantidad > p.stock){ alert("Stock insuficiente"); return p; }
-        return { ...p, cantidad, subtotal: cantidad * p.precio };
-      }
-      return p;
-    }));
-  };
-
-  const eliminarProductoVenta=(id)=>{
-    setProductosVenta(productosVenta.filter(p=>p.id_productos !== id));
-  };
-
-  const calcularSubtotal = () => productosVenta.reduce((t,p)=> t + p.subtotal, 0);
-  const calcularIVA      = () => productosVenta.reduce((t,p)=> t + (p.subtotal * p.iva), 0);
-  const totalFinal       = () => calcularSubtotal() + calcularIVA();
-
-  const guardarFactura = async()=>{
-    if(!usuarioSesion.id)          { alert("Usuario no válido");    return; }
-    if(!cliente)                   { alert("Seleccione cliente");   return; }
-    if(productosVenta.length === 0){ alert("Agregue productos");    return; }
-
-    const factura = {
-      cliente:    Number(cliente),
-      id_usuario: usuarioSesion.id,
-      subtotal:   calcularSubtotal(),
-      iva:        calcularIVA(),
-      total:      totalFinal(),
-      productos:  productosVenta.map(p=>({
-        id_producto: p.id_productos,
-        cantidad:    p.cantidad,
-        precio:      p.precio,
-        iva:         p.iva,
-        subtotal:    p.subtotal
-      }))
-    };
-
-    try{
-      const res  = await fetch("http://localhost/factufast-api/facturas/guardar.php",{
-        method:  "POST",
-        headers: { "Content-Type":"application/json" },
-        body:    JSON.stringify(factura)
-      });
-      const data = await res.json();
-      if(data.success){
-        navigate(`/factura/${data.id_factura}`);
-        setProductosVenta([]);
-        setCliente("");
-        setClienteData(null);
-      } else {
-        alert("Error guardando factura");
-      }
-    } catch(err){
-      console.error(err);
-      alert("Error servidor");
+    try {
+      await Promise.all([cargarProductos(), cargarClientes()]);
+    } catch (error) {
+      console.error(error);
+      alert('Error cargando datos de facturacion');
+    } finally {
+      setCargando(false);
     }
   };
 
-  return(
-    <div className="gerente-container">
+  const cargarProductos = async () => {
+    const res = await fetch('http://localhost/factufast-api/inventario/listar.php');
+    const data = await res.json();
+    setProductos(Array.isArray(data.inventario) ? data.inventario : []);
+  };
 
-      <h2>FACTURACIÓN</h2>
-      <p><b>Usuario:</b> {usuarioSesion.nombre}</p>
+  const cargarClientes = async () => {
+    const res = await fetch('http://localhost/factufast-api/clientes/listar.php');
+    const data = await res.json();
+    setClientes(Array.isArray(data) ? data : []);
+  };
 
-      {/* CLIENTE */}
-      <select value={cliente} onChange={(e)=>{
-        const id = e.target.value;
-        setCliente(id);
-        setClienteData(clientes.find(c=>c.id_cliente == id));
-      }}>
-        <option value="">Seleccione cliente</option>
-        {clientes.map(c=>(
-          <option key={c.id_cliente} value={c.id_cliente}>
-            {c.nombre_cliente}
-          </option>
-        ))}
-      </select>
+  const formato = (num) => Number(num || 0).toLocaleString('es-CO');
 
-      {clienteData && (
-        <div>
-          <p>Documento: {clienteData.nit_cliente}</p>
-          <p>Teléfono:  {clienteData.telefono_cliente}</p>
-        </div>
+  const normalizarIva = (iva) => {
+    const valor = Number(iva || 0);
+    if (Number.isNaN(valor) || valor <= 0) {
+      return 0.19;
+    }
+    return valor > 1 ? valor / 100 : valor;
+  };
+
+  const validarIvaProducto = (iva) => {
+    const ivaNormalizado = normalizarIva(iva);
+    return !Number.isNaN(ivaNormalizado) && ivaNormalizado > 0 && ivaNormalizado <= 1;
+  };
+
+  const productosDisponibles = productos.filter((p) => Number(p.stock || 0) > 0);
+  const clientesFiltrados = clientes.filter((c) =>
+  String(c.nombre_cliente || '')
+    .toLowerCase()
+    .includes(busquedaCliente.toLowerCase())
+);
+  const agregarProducto = (id) => {
+    if (!id) return;
+
+    const prod = productos.find((p) => String(p.id_productos) === String(id));
+
+    if (!prod) return;
+
+    if (!validarIvaProducto(prod.iva)) {
+      alert('IVA inválido para este producto');
+      return;
+    }
+
+    if (Number(prod.stock || 0) <= 0) {
+      alert('Producto sin stock');
+      return;
+    }
+
+    const existe = productosVenta.find((p) => String(p.id_productos) === String(id));
+
+    if (existe) {
+      alert('Producto ya agregado');
+      return;
+    }
+
+    const precio = Number(prod.precio_venta || prod.precio_salida || 0);
+    const precioCompra = Number(prod.precio_compra || prod.precio_entrada || 0);
+
+    setProductosVenta([
+      ...productosVenta,
+      {
+        id_productos: prod.id_productos,
+        nombre_producto: prod.nombre_producto,
+        precio,
+        precio_compra: precioCompra,
+        precio_entrada: precioCompra,
+        precio_venta: precio,
+        iva: normalizarIva(prod.iva),
+        stock: Number(prod.stock || 0),
+        cantidad: 1,
+        subtotal: precio,
+      },
+    ]);
+  };
+
+  const cambiarCantidad = (id, cantidad) => {
+    const nuevaCantidad = Number(cantidad || 1);
+
+    setProductosVenta(
+      productosVenta.map((p) => {
+        if (String(p.id_productos) !== String(id)) return p;
+
+        if (nuevaCantidad <= 0) {
+          return { ...p, cantidad: 1, subtotal: p.precio };
+        }
+
+        if (nuevaCantidad > p.stock) {
+          alert('Stock insuficiente');
+          return p;
+        }
+
+        return {
+          ...p,
+          cantidad: nuevaCantidad,
+          subtotal: nuevaCantidad * p.precio,
+        };
+      })
+    );
+  };
+
+  const eliminarProductoVenta = (id) => {
+    setProductosVenta(productosVenta.filter((p) => String(p.id_productos) !== String(id)));
+  };
+
+  const seleccionarCliente = (id) => {
+    setCliente(id);
+    setClienteData(clientes.find((c) => String(c.id_cliente) === String(id)) || null);
+  };
+
+  const subtotal = useMemo(
+    () => productosVenta.reduce((total, p) => total + Number(p.subtotal || 0), 0),
+    [productosVenta]
+  );
+
+  const ivaTotal = useMemo(
+    () =>
+      productosVenta.reduce(
+        (total, p) => total + Number(p.subtotal || 0) * normalizarIva(p.iva),
+        0
+      ),
+    [productosVenta]
+  );
+
+  const total = subtotal + ivaTotal;
+
+  const limpiarFactura = () => {
+    setProductosVenta([]);
+    setCliente('');
+    setClienteData(null);
+  };
+
+  const guardarFactura = async () => {
+    if (!window.confirm('¿Estás seguro que deseas guardar la factura?')) return;
+    if (!usuarioSesion.id) {
+      alert('Usuario no valido');
+      return;
+    }
+
+    if (!cliente) {
+      alert('Seleccione cliente');
+      return;
+    }
+
+    if (productosVenta.length === 0) {
+      alert('Agregue productos');
+      return;
+    }
+
+    const factura = {
+      cliente: Number(cliente),
+      id_usuario: usuarioSesion.id,
+      subtotal,
+      iva: ivaTotal,
+      total,
+      productos: productosVenta.map((p) => ({
+        id_producto: p.id_productos,
+        cantidad: p.cantidad,
+        precio: p.precio,
+        precio_compra: p.precio_compra,
+        precio_entrada: p.precio_compra,
+        precio_venta: p.precio,
+        iva: p.iva,
+        subtotal: p.subtotal,
+      })),
+    };
+
+    setGuardando(true);
+
+    try {
+      const res = await fetch('http://localhost/factufast-api/facturas/guardar.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(factura),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        limpiarFactura();
+        window.open(`${window.location.origin}/factura/${data.id_factura}`, '_blank');
+      } else {
+        alert(data.error || 'Error guardando factura');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error conectando con el servidor');
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+  return (
+    <div className="facturas-page">
+      <h2>Facturación</h2>
+      <p>Generar nueva factura</p>
+
+      {cargando ? (
+        <p>Cargando datos...</p>
+      ) : (
+        <>
+          <div className="factura-card">
+            <h3>Cliente</h3>
+
+            <input
+  type="text"
+  placeholder="Buscar cliente..."
+  value={busquedaCliente}
+  onChange={(e) => {
+    setBusquedaCliente(e.target.value);
+  }}
+/>
+
+{busquedaCliente && (
+  <div
+    style={{
+      maxHeight: "200px",
+      overflowY: "auto",
+      border: "1px solid #ccc",
+      background: "#fff"
+    }}
+  >
+    {clientesFiltrados.map((c) => (
+      <div
+        key={c.id_cliente}
+        style={{
+          padding: "8px",
+          cursor: "pointer",
+          borderBottom: "1px solid #eee"
+        }}
+        onClick={() => {
+          seleccionarCliente(c.id_cliente);
+          setBusquedaCliente(c.nombre_cliente);
+        }}
+      >
+        {c.nombre_cliente}
+      </div>
+    ))}
+  </div>
+)}
+
+            {clienteData && (
+              <div className="factura-grid" style={{ gap: '16px' }}>
+                <div>
+                  <strong>Documento</strong>
+                  <p>{clienteData.nit_cliente || 'No registrado'}</p>
+                </div>
+                <div>
+                  <strong>Teléfono</strong>
+                  <p>{clienteData.telefono_cliente || 'No registrado'}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="factura-card">
+            <h3>Agregar producto</h3>
+
+            <select className="producto-select" value="" onChange={(e) => agregarProducto(e.target.value)}>
+              <option value="">Seleccione producto</option>
+              {productosDisponibles.map((p, index) => (
+                <option
+                  key={p.id_productos}
+                  value={p.id_productos}
+                  style={{
+                    backgroundColor: index % 2 === 0 ? '#f8fafc' : '#ffffff',
+                    color: '#111827',
+                  }}
+                  title={`Precio: $${formato(p.precio_venta)} • Stock: ${p.stock}`}
+                >
+                  {p.nombre_producto}
+                </option>
+              ))}
+            </select>
+
+            {productosDisponibles.length === 0 && (
+              <p style={{ color: '#b71c1c', fontWeight: 600 }}>
+                No hay productos disponibles en stock.
+              </p>
+            )}
+          </div>
+
+          <div className="factura-card">
+            <h3>Productos agregados</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Precio unitario</th>
+                  <th>Cantidad</th>
+                  <th>IVA</th>
+                  <th>Subtotal</th>
+                  <th>Accion</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {productosVenta.length ? (
+                  productosVenta.map((p) => (
+                    <tr key={p.id_productos}>
+                      <td>{p.nombre_producto}</td>
+                      <td>${formato(p.precio)}</td>
+                      <td>
+                        <input
+                          type="number"
+                          min="1"
+                          max={p.stock}
+                          value={p.cantidad}
+                          onChange={(e) => cambiarCantidad(p.id_productos, e.target.value)}
+                        />
+                      </td>
+                      <td>${formato(p.subtotal * p.iva)}</td>
+                      <td>${formato(p.subtotal)}</td>
+                      <td>
+                        <button type="button" onClick={() => eliminarProductoVenta(p.id_productos)}>
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6">No hay productos agregados</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="factura-totales">
+            <h4>Subtotal</h4>
+            <p>${formato(subtotal)}</p>
+            <h4>IVA</h4>
+            <p>${formato(ivaTotal)}</p>
+            <h3>Total</h3>
+            <p>${formato(total)}</p>
+          </div>
+
+          <div className="factura-actions" style={{ marginTop: '20px' }}>
+            <button
+              type="button"
+              className="btn-registrar btn-large"
+              onClick={guardarFactura}
+              disabled={guardando}
+            >
+              {guardando ? 'Generando factura...' : 'Generar factura'}
+            </button>
+          </div>
+        </>
       )}
-
-      <h3>Agregar producto</h3>
-      <select onChange={(e)=>agregarProducto(e.target.value)}>
-        <option value="">Seleccione producto</option>
-        {productos.map(p=>(
-          <option key={p.id_productos} value={p.id_productos}>
-            {p.nombre_producto} - ${formato(p.precio_venta)}
-          </option>
-        ))}
-      </select>
-
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Producto</th><th>Precio</th>
-            <th>Cantidad</th><th>Subtotal</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {productosVenta.map((p,i)=>(
-            <tr key={i}>
-              <td>{p.nombre_producto}</td>
-              <td>${formato(p.precio)}</td>
-              <td>
-                <input type="number" value={p.cantidad}
-                  onChange={(e)=>cambiarCantidad(p.id_productos, Number(e.target.value))}
-                />
-              </td>
-              <td>${formato(p.subtotal)}</td>
-              <td>
-                <button onClick={()=>eliminarProductoVenta(p.id_productos)}>X</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <h4>Subtotal: ${formato(calcularSubtotal())}</h4>
-      <h4>IVA:      ${formato(calcularIVA())}</h4>
-      <h3>Total:    ${formato(totalFinal())}</h3>
-
-      <button onClick={guardarFactura}>Generar Factura</button>
-
-      {/* ✅ Listado de facturas solo para gerente y admin */}
-      {esGerente && (
-        <div style={{ marginTop:"20px" }}>
-          <button onClick={()=>navigate("/gerente/listado-facturas")}>
-            📊 Ver listado de facturas
-          </button>
-        </div>
-      )}
-
     </div>
   );
 }

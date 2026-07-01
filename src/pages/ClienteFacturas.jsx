@@ -19,6 +19,7 @@ function ClienteFacturas() {
   }, [nit]);
 
   const cerrarSesion = () => {
+    if (!window.confirm("¿Estás seguro que deseas cerrar sesión?")) return;
     localStorage.removeItem("cliente_nit");
     localStorage.removeItem("cliente_nombre");
     localStorage.removeItem("cliente_id");
@@ -57,9 +58,7 @@ function ClienteFacturas() {
           borderRadius: "5px",
           cursor: "pointer",
           fontSize: "13px"
-        }}>
-          Cerrar sesión
-        </button>
+        }}>Cerrar sesión</button>
       </div>
 
       <h2 style={{ color: "#C9BD86", fontSize: "18px",

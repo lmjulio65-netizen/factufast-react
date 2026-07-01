@@ -1,10 +1,12 @@
+import "./Sidebar.css";
+import { useState } from "react";
 import {
   NavLink,
   useNavigate,
 } from 'react-router-dom';
 
 function Sidebar() {
-
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const rol = usuario.rol || "";
@@ -17,84 +19,84 @@ function Sidebar() {
   const base = esGerente ? "/gerente" : esAdmin ? "/admin" : "/empleado";
 
   const cerrarSesion = () => {
+    if (!window.confirm("¿Estás seguro que deseas cerrar sesión?")) return;
     localStorage.removeItem("usuario");
     navigate("/login");
   };
 
-  return (
-    <div style={{
-      width: "220px",
-      background: "#3b3b1f",
-      color: "white",
-      padding: "20px",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between"
-    }}>
+const toggleMenu = () => setMenuAbierto(!menuAbierto);
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+return (
+  <>
+    <button
+      onClick={toggleMenu}
+      className="hamburguesa"
+    >
+      ☰
+    </button>
+
+    <div
+      className={`sidebar ${menuAbierto ? "activo" : ""}`}
+      style={{
+        width: "220px",
+        background: "#3b3b1f",
+        color: "white",
+        padding: "20px",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "15px"
+      }}
+    >
+
+      <nav style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
 
         {/* GERENTE — menú completo */}
         {esGerente && (
           <>
-            <NavLink style={estiloLink} to={`${base}/configuracion`}>⚙️Configuración</NavLink>
-            <NavLink style={estiloLink} to={`${base}/reportes`}>📊Reportes</NavLink>
-            <NavLink style={estiloLink} to={`${base}/inventario`}>📦Inventario</NavLink>
-            <NavLink style={estiloLink} to={`${base}/productos`}>🛍️Productos</NavLink>
-            <NavLink style={estiloLink} to={`${base}/clientes`}>👥Clientes</NavLink>
             <NavLink style={estiloLink} to={`${base}/proveedores`}>🚚Proveedores</NavLink>
+            <NavLink style={estiloLink} to={`${base}/productos`}>🛍️Productos</NavLink>
+            <NavLink style={estiloLink} to={`${base}/inventario`}>📦Inventario</NavLink>
+            <NavLink style={estiloLink} to={`${base}/clientes`}>👥Clientes</NavLink>
             <NavLink style={estiloLink} to={`${base}/facturas`}>🧾Facturas</NavLink>
-            <NavLink style={estiloLink} to={`${base}/listado-facturas`}>📊 Listado Facturas</NavLink>
-            <NavLink style={estiloLink} to="/registro">➕ Registrar usuario</NavLink>
+            <NavLink style={estiloLink} to={`${base}/listado-facturas`}>📄Listado Facturas</NavLink>
+            <NavLink style={estiloLink} to={`${base}/reportes`}>📊Reportes</NavLink>
+            <NavLink style={estiloLink} to={`${base}/configuracion`}>⚙️Usuarios</NavLink>
           </>
         )}
 
-        {/* ADMINISTRADOR — sin registro de usuarios, sin eliminar */}
+        {/* ADMINISTRADOR — menú completo sin permisos de anulación */}
         {esAdmin && (
           <>
-            <NavLink style={estiloLink} to={`${base}/reportes`}>Reportes</NavLink>
-            <NavLink style={estiloLink} to={`${base}/inventario`}>Inventario</NavLink>
-            <NavLink style={estiloLink} to={`${base}/productos`}>Productos</NavLink>
-            <NavLink style={estiloLink} to={`${base}/clientes`}>Clientes</NavLink>
-            <NavLink style={estiloLink} to={`${base}/proveedores`}>Proveedores</NavLink>
-            <NavLink style={estiloLink} to={`${base}/facturas`}>Facturas</NavLink>
-            <NavLink style={estiloLink} to={`${base}/listado-facturas`}>📊 Listado Facturas</NavLink>
+            <NavLink style={estiloLink} to={`${base}/proveedores`}>🚚Proveedores</NavLink>
+            <NavLink style={estiloLink} to={`${base}/productos`}>🛍️Productos</NavLink>
+            <NavLink style={estiloLink} to={`${base}/inventario`}>📦Inventario</NavLink>
+            <NavLink style={estiloLink} to={`${base}/clientes`}>👥Clientes</NavLink>
+            <NavLink style={estiloLink} to={`${base}/facturas`}>🧾Facturas</NavLink>
+            <NavLink style={estiloLink} to={`${base}/listado-facturas`}>📄Listado Facturas</NavLink>
+            <NavLink style={estiloLink} to={`${base}/reportes`}>📊Reportes</NavLink>
+            <NavLink style={estiloLink} to={`${base}/configuracion`}>⚙️Usuarios</NavLink>
           </>
         )}
 
-        {/* EMPLEADO — operaciones básicas */}
+        {/* EMPLEADO — solo consulta de inventario, clientes, facturas y listado */}
         {esEmpleado && (
           <>
-            <NavLink style={estiloLink} to={`${base}/facturas`}>Facturas</NavLink>
-            <NavLink style={estiloLink} to={`${base}/clientes`}>Clientes</NavLink>
-            <NavLink style={estiloLink} to={`${base}/proveedores`}>Proveedores</NavLink>
-            <NavLink style={estiloLink} to={`${base}/productos`}>Productos</NavLink>
-            <NavLink style={estiloLink} to={`${base}/inventario`}>Inventario</NavLink>
+            <NavLink style={estiloLink} to={`${base}/inventario`}>📦Inventario</NavLink>
+            <NavLink style={estiloLink} to={`${base}/clientes`}>👥Clientes</NavLink>
+            <NavLink style={estiloLink} to={`${base}/facturas`}>🧾Facturas</NavLink>
+            <NavLink style={estiloLink} to={`${base}/listado-facturas`}>📄Listado Facturas</NavLink>
           </>
         )}
 
       </nav>
 
-     / {/* CERRAR SESIÓN 
-      <button
-        onClick={cerrarSesion}
-        style={{
-          marginTop: "30px",
-          background: "#8a0000",
-          color: "white",
-          border: "none",
-          padding: "10px",
-          borderRadius: "6px",
-          cursor: "pointer",
-          fontWeight: "bold"
-        }}
-      >
-        Cerrar sesión
-      </button>*/}
 
-    </div>
-  );
+        </div>
+   </>
+);
 }
 
 const estiloLink = ({ isActive }) => ({

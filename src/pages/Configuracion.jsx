@@ -1,290 +1,331 @@
-import './Gerente.css';
+import './Configuracion.css';
 
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 function Configuracion() {
-
   const [usuarios, setUsuarios] = useState([]);
 
-  const [nombre, setNombre] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [cedula, setCedula] = useState("");
-  const [rol, setRol] = useState("");
+  const [nombre, setNombre] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [cedula, setCedula] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [rol, setRol] = useState('');
 
   const [editando, setEditando] = useState(false);
   const [idUsuario, setIdUsuario] = useState(null);
-
-  // USUARIO ACTIVO
-  const usuarioActivo = localStorage.getItem("usuario");
-  const rolActivo = localStorage.getItem("rol");
+  const [busqueda, setBusqueda] = useState('');
+  const [cargando, setCargando] = useState(false);
 
   useEffect(() => {
     obtenerUsuarios();
   }, []);
 
   const obtenerUsuarios = () => {
+    setCargando(true);
 
-    fetch("http://localhost/factufast-api/usuarios/listar.php")
-      .then(res => res.json())
-      .then(data => setUsuarios(data));
-
+    fetch('http://localhost/factufast-api/usuarios/listar.php')
+      .then((res) => res.json())
+      .then((data) => setUsuarios(Array.isArray(data) ? data : []))
+      .catch(() => alert('Error cargando usuarios'))
+      .finally(() => setCargando(false));
   };
 
-  // REGISTRAR USUARIO
-  const registrarUsuario = (e) => {
+  const nombreRol = (idRol) => {
+    if (String(idRol) === '1') return 'Gerente';
+    if (String(idRol) === '2') return 'Administrador';
+    return 'Empleado';
+  };
 
+  const validarFormulario = () => {
+    if (!nombre || !correo || !telefono || !cedula || !direccion || !rol) {
+      alert('Complete todos los campos');
+      return false;
+    }
+
+    if (!/^[0-9]+$/.test(telefono)) {
+      alert('El telefono solo debe contener numeros');
+      return false;
+    }
+
+    if (!/^[0-9]+$/.test(cedula)) {
+      alert('La cedula solo debe contener numeros');
+      return false;
+    }
+
+    if (!correo.includes('@')) {
+      alert('Ingrese un correo valido');
+      return false;
+    }
+
+    return true;
+  };
+
+  const datosUsuario = () => ({
+    nombre_usuario: nombre,
+    correo_usuario: correo,
+    telefono_usuario: telefono,
+    cedula_usuario: cedula,
+    direccion_usuario: direccion,
+    id_rol: rol,
+  });
+
+  const registrarUsuario = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost/factufast-api/usuarios/guardar.php", {
+    if (!validarFormulario()) return;
 
-      method: "POST",
+    if (!window.confirm('¿Estás seguro que deseas registrar este usuario?')) return;
 
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        nombre_usuario: nombre,
-        correo_usuario: correo,
-        telefono_usuario: telefono,
-        cedula_usuario: cedula,
-        id_rol: rol
-      })
-
+    fetch('http://localhost/factufast-api/usuarios/guardar.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datosUsuario()),
     })
-    .then(res => res.json())
-    .then(() => {
-
-      obtenerUsuarios();
-      limpiarFormulario();
-
-    });
-
+      .then((res) => res.json())
+      .then(() => {
+        obtenerUsuarios();
+        limpiarFormulario();
+        alert('Usuario registrado');
+      })
+      .catch(() => alert('Error registrando usuario'));
   };
 
-  // ELIMINAR USUARIO
   const eliminarUsuario = (id) => {
-
-    if (!window.confirm("¿Eliminar usuario?")) return;
+    if (!window.confirm('Eliminar usuario?')) return;
 
     fetch(`http://localhost/factufast-api/usuarios/eliminar.php?id=${id}`)
-    .then(res => res.json())
-    .then(() => obtenerUsuarios());
-
+      .then((res) => res.json())
+      .then(() => obtenerUsuarios())
+      .catch(() => alert('Error eliminando usuario'));
   };
 
-  // RESET PASSWORD
   const resetPassword = (id) => {
+    if (!window.confirm('Restablecer contrasena del usuario?')) return;
 
-    if(!window.confirm("¿Restablecer contraseña del usuario?")) return;
-
-    fetch("http://localhost/factufast-api/usuarios/reset_password.php?id="+id)
-    .then(res => res.json())
-    .then(() => {
-
-      alert("La contraseña del usuario fue restablecida.\n\nNueva contraseña temporal: 123456\n\nEl usuario debe cambiarla al ingresar.");
-
-    })
-    .catch(error => console.log(error));
-
+    fetch(`http://localhost/factufast-api/usuarios/reset_password.php?id=${id}`)
+      .then((res) => res.json())
+      .then(() => {
+        alert(
+          'La contrasena del usuario fue restablecida.\n\nNueva contrasena temporal: 123456\n\nEl usuario debe cambiarla al ingresar.'
+        );
+      })
+      .catch(() => alert('Error restableciendo contrasena'));
   };
 
-  // EDITAR USUARIO
   const editarUsuario = (user) => {
-
     setEditando(true);
-
     setIdUsuario(user.id_usuario);
-    setNombre(user.nombre_usuario);
-    setCorreo(user.correo_usuario);
-    setTelefono(user.telefono_usuario);
-    setCedula(user.cedula_usuario);
-    setRol(user.id_rol);
-
+    setNombre(user.nombre_usuario || '');
+    setCorreo(user.correo_usuario || '');
+    setTelefono(user.telefono_usuario || '');
+    setCedula(user.cedula_usuario || '');
+    setDireccion(user.direccion_usuario || '');
+    setRol(String(user.id_rol || ''));
   };
 
-  // ACTUALIZAR USUARIO
   const actualizarUsuario = (e) => {
-
     e.preventDefault();
 
-    fetch("http://localhost/factufast-api/usuarios/actualizar.php", {
+    if (!validarFormulario()) return;
 
-      method: "POST",
+    if (!window.confirm('¿Estás seguro que deseas actualizar este usuario?')) return;
 
-      headers:{
-        "Content-Type":"application/json"
-      },
-
+    fetch('http://localhost/factufast-api/usuarios/actualizar.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-
         id_usuario: idUsuario,
-        nombre_usuario: nombre,
-        correo_usuario: correo,
-        telefono_usuario: telefono,
-        cedula_usuario: cedula,
-        id_rol: rol
-
-      })
-
+        ...datosUsuario(),
+      }),
     })
-    .then(res => res.json())
-    .then(() => {
-
-      obtenerUsuarios();
-      limpiarFormulario();
-
-    });
-
+      .then((res) => res.json())
+      .then(() => {
+        obtenerUsuarios();
+        limpiarFormulario();
+        alert('Usuario actualizado');
+      })
+      .catch(() => alert('Error actualizando usuario'));
   };
 
   const limpiarFormulario = () => {
-
-    setNombre("");
-    setCorreo("");
-    setTelefono("");
-    setCedula("");
-    setRol("");
-
+    setNombre('');
+    setCorreo('');
+    setTelefono('');
+    setCedula('');
+    setDireccion('');
+    setRol('');
     setEditando(false);
     setIdUsuario(null);
-
   };
 
-  // CERRAR SESION
-  const cerrarSesion = () => {
+  const usuariosFiltrados = useMemo(() => {
+    const texto = busqueda.toLowerCase();
 
-    localStorage.removeItem("usuario");
-    localStorage.removeItem("rol");
-
-    window.location.href="/login";
-
-  };
+    return usuarios.filter(
+      (user) =>
+        String(user.nombre_usuario || '').toLowerCase().includes(texto) ||
+        String(user.correo_usuario || '').toLowerCase().includes(texto) ||
+        String(user.cedula_usuario || '').toLowerCase().includes(texto) ||
+        String(user.direccion_usuario || '').toLowerCase().includes(texto) ||
+        nombreRol(user.id_rol).toLowerCase().includes(texto)
+    );
+  }, [usuarios, busqueda]);
 
   return (
-
-    <div className="gerente-container">
-
-      <h2>Configuración de Usuarios</h2>
-
-      {/* USUARIO ACTIVO */}
-
-      <div style={{marginBottom:"20px"}}>
-
+    <div className="config-page">
+      <div className="config-header">
+        <div>
+          <h2>Configuracion de Usuarios</h2>
+          <p>Administra accesos, roles y datos de contacto del equipo.</p>
+        </div>
       </div>
 
+      <form
+        className="config-form"
+        onSubmit={editando ? actualizarUsuario : registrarUsuario}
+      >
+        <div className="config-form-title">
+          <div>
+            <h3>{editando ? 'Editar usuario' : 'Registrar usuario'}</h3>
+            {editando && <span>Editando ID #{idUsuario}</span>}
+          </div>
+        </div>
 
-      {/* FORMULARIO */}
+        <div className="config-form-grid">
+          <input
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
 
-      <form onSubmit={editando ? actualizarUsuario : registrarUsuario}>
+          <input
+            type="email"
+            placeholder="Correo"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
+          />
 
-        <input
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e)=>setNombre(e.target.value)}
-        />
+          <input
+            placeholder="Telefono"
+            value={telefono}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            onChange={(e) => setTelefono(e.target.value.replace(/\D/g, ''))}
+          />
 
-        <input
-          placeholder="Correo"
-          value={correo}
-          onChange={(e)=>setCorreo(e.target.value)}
-        />
+          <input
+            placeholder="Cedula"
+            value={cedula}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            onChange={(e) => setCedula(e.target.value.replace(/\D/g, ''))}
+          />
 
-        <input
-          placeholder="Teléfono"
-          value={telefono}
-          onChange={(e)=>setTelefono(e.target.value)}
-        />
+          <input
+            placeholder="Direccion"
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+          />
 
-        <input
-          placeholder="Cédula"
-          value={cedula}
-          onChange={(e)=>setCedula(e.target.value)}
-        />
+          <select value={rol} onChange={(e) => setRol(e.target.value)}>
+            <option value="">Seleccione rol</option>
+            <option value="1">Gerente</option>
+            <option value="2">Administrador</option>
+            <option value="3">Empleado</option>
+          </select>
+        </div>
 
-        <input
-          placeholder="Rol (1=Gerente, 2=Admin, 3=Empleado)"
-          value={rol}
-          onChange={(e)=>setRol(e.target.value)}
-        />
+        <div className="config-actions">
+          <button type="submit" className="btn-primary btn-registrar">
+            {editando ? 'Actualizar Usuario' : 'Registrar Usuario'}
+          </button>
 
-        <button type="submit">
-
-          {editando ? "Actualizar Usuario" : "Registrar Usuario"}
-
-        </button>
-
+          {editando && (
+            <button type="button" className="btn-secondary" onClick={limpiarFormulario}>
+              Cancelar
+            </button>
+          )}
+        </div>
       </form>
 
+      <div className="config-toolbar">
+        <input
+          placeholder="Buscar por nombre, correo, cedula, direccion o rol"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
 
-      {/* TABLA */}
-
-      <table>
-
-        <thead>
-
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Cédula</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {usuarios.map((user)=>(
-
-            <tr key={user.id_usuario}>
-
-              <td>{user.id_usuario}</td>
-              <td>{user.nombre_usuario}</td>
-              <td>{user.correo_usuario}</td>
-              <td>{user.telefono_usuario}</td>
-              <td>{user.cedula_usuario}</td>
-
-              <td>
-                {user.id_rol == 1 ? "Gerente" :
-                 user.id_rol == 2 ? "Administrador" :
-                 "Empleado"}
-              </td>
-
-              <td>
-
-                <button onClick={()=>editarUsuario(user)}>
-                  Editar
-                </button>
-
-                <button onClick={()=>eliminarUsuario(user.id_usuario)}>
-                  Eliminar
-                </button>
-
-                <button onClick={()=>resetPassword(user.id_usuario)}>
-                  Reset clave
-                </button>
-
-              </td>
-
+      <div className="config-table-wrap">
+        <table className="config-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Telefono</th>
+              <th>Cedula</th>
+              <th>Direccion</th>
+              <th>Rol</th>
+              <th>Acciones</th>
             </tr>
+          </thead>
 
-          ))}
+          <tbody>
+            {cargando ? (
+              <tr>
+                <td colSpan="8">Cargando usuarios...</td>
+              </tr>
+            ) : usuariosFiltrados.length ? (
+              usuariosFiltrados.map((user) => (
+                <tr key={user.id_usuario}>
+                  <td>{user.id_usuario}</td>
+                  <td>{user.nombre_usuario}</td>
+                  <td>{user.correo_usuario}</td>
+                  <td>{user.telefono_usuario}</td>
+                  <td>{user.cedula_usuario}</td>
+                  <td>{user.direccion_usuario}</td>
+                  <td>
+                    <span className={`rol-badge rol-${user.id_rol}`}>
+                      {nombreRol(user.id_rol)}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="table-actions">
+                      <button type="button" onClick={() => editarUsuario(user)}>
+                        Editar
+                      </button>
 
-        </tbody>
+                      <button
+                        type="button"
+                        className="btn-danger"
+                        onClick={() => eliminarUsuario(user.id_usuario)}
+                      >
+                        Eliminar
+                      </button>
 
-      </table>
-
+                      <button
+                        type="button"
+                        className="btn-warning"
+                        onClick={() => resetPassword(user.id_usuario)}
+                      >
+                        Reset clave
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8">No hay usuarios para mostrar</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
-
   );
-
 }
 
 export default Configuracion;

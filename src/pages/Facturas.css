@@ -1,0 +1,242 @@
+.facturas-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px;
+  color: #111827;
+  background: #f8fafc;
+}
+
+.facturas-page h2 {
+  margin: 0 0 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
+}
+
+.facturas-page h3 {
+  margin: 26px 0 12px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.facturas-page h4 {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+.facturas-page p {
+  margin: 8px 0;
+  color: #475569;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.facturas-page select,
+.facturas-page input {
+  width: 100%;
+  max-width: 460px;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  padding: 11px 13px;
+  min-height: 44px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+  color: #172033;
+  margin-bottom: 10px;
+}
+
+.facturas-page .producto-select {
+  border-color: #4338ca;
+  background: #eef2ff;
+  color: #111827;
+}
+
+.facturas-page .producto-select option {
+  color: #111827;
+}
+
+.facturas-page .producto-select option:nth-child(odd) {
+  background-color: #f8fafc;
+}
+
+.stock-helper {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #1d4ed8;
+  background: #eef2ff;
+  border: 1px solid #bfdbfe;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.facturas-page select:focus,
+.facturas-page input:focus {
+  border-color: #e8c860;
+  box-shadow: 0 0 0 3px rgba(232, 200, 109, 0.18);
+}
+
+.facturas-page table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
+  margin: 18px 0 22px;
+  background: #fff;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.facturas-page th,
+.facturas-page td {
+  border-bottom: 1px solid #e4e7ec;
+  padding: 13px 14px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.facturas-page th {
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.facturas-page tr:last-child td {
+  border-bottom: 0;
+}
+
+.facturas-page td input[type="number"] {
+  max-width: 95px;
+  min-height: 36px;
+  padding: 6px 8px;
+  margin-bottom: 0;
+}
+
+.facturas-page button {
+  border: 0;
+  border-radius: 7px;
+  padding: 11px 16px;
+  background: #e8c860;
+  color: #111827;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+}
+
+.facturas-page button:hover {
+  background: #d4b149;
+}
+
+.facturas-page button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.facturas-page td button {
+  padding: 8px 11px;
+  background: #b71c1c;
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.facturas-page td button:hover {
+  background: #8f1414;
+}
+
+.factura-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 8px;
+  padding: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  margin-bottom: 18px;
+}
+
+.factura-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.factura-totales {
+  max-width: 380px;
+  margin-left: auto;
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.factura-totales {
+  text-align: right;
+}
+
+.factura-totales h4,
+.factura-totales h3 {
+  display: block;
+  margin: 0 0 8px;
+}
+
+.factura-totales h3 {
+  padding-top: 10px;
+  border-top: 1px solid #e4e7ec;
+}
+
+.factura-totales p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: #111827;
+}
+
+.factura-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+  .facturas-page {
+    padding: 16px;
+  }
+
+  .factura-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .facturas-page select,
+  .facturas-page input {
+    max-width: 100%;
+  }
+
+  .facturas-page table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .factura-totales {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .facturas-page button {
+    width: 100%;
+  }
+
+  .facturas-page td button {
+    width: auto;
+  }
+}

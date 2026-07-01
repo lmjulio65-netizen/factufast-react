@@ -1,0 +1,579 @@
+.page-listados,
+.gerente-container,
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* TITULOS */
+
+.page-listados h2,
+.gerente-container h2,
+.container h2 {
+
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
+  margin-bottom:18px;
+
+}
+
+
+.page-listados p,
+.gerente-container p,
+.container p {
+
+  font-size:14px;
+  color:#475569;
+  margin:8px 0 16px;
+
+}
+
+
+.page-listados h3,
+.gerente-container h3,
+.container h3 {
+
+  margin-bottom:18px;
+  color:#111827;
+
+}
+
+
+
+
+/* ========================= */
+/* CAJAS */
+/* ========================= */
+
+
+.info-box {
+
+  background:#ffffff;
+
+  border:1px solid rgba(15,23,42,.08);
+
+  padding:16px;
+
+  border-radius:12px;
+
+  margin-bottom:20px;
+
+  color:#111827;
+
+}
+
+
+
+
+.page-listados form,
+.gerente-container form,
+.container form {
+
+
+  background:white;
+
+  padding:18px;
+
+  border-radius:12px;
+
+  box-shadow:0 6px 18px rgba(15,23,42,.10);
+
+  margin-bottom:24px;
+
+
+}
+
+
+
+
+
+/* ========================= */
+/* INPUTS */
+/* ========================= */
+
+
+.page-listados input,
+.page-listados select,
+.gerente-container input,
+.gerente-container select,
+.container input,
+.container select {
+
+
+width:100%;
+
+box-sizing:border-box;
+
+border:1px solid rgba(15,23,42,.12);
+
+border-radius:8px;
+
+padding:11px 14px;
+
+margin-bottom:12px;
+
+font-size:13px;
+
+background:white;
+
+color:#111827;
+
+
+}
+
+
+
+.page-listados input:focus,
+.page-listados select:focus,
+.gerente-container input:focus,
+.gerente-container select:focus,
+.container input:focus,
+.container select:focus {
+
+
+border-color:#e8c860;
+
+box-shadow:0 0 0 3px rgba(232,200,109,.18);
+
+outline:none;
+
+
+}
+
+
+
+
+/* ========================= */
+/* TABLAS */
+/* ========================= */
+
+
+.page-listados table,
+.gerente-container table,
+.container table,
+.inventario-container table,
+.productos-container table,
+.inventario-page table,
+.productos-page table,
+.proveedores-container table,
+.clientes-container table,
+.facturas-container table {
+
+
+width:100%;
+
+min-width:850px;
+
+border-collapse:separate;
+
+border-spacing:0 10px;
+
+background:transparent;
+
+border:none;
+
+margin-bottom:24px;
+
+}
+
+
+
+
+/* CABECERA */
+
+
+.page-listados th,
+.gerente-container th,
+.container th,
+.inventario-container th,
+.productos-container th,
+.inventario-page th,
+.productos-page th,
+.proveedores-container th,
+.clientes-container th,
+.facturas-container th {
+
+
+background:#111827;
+
+color:white;
+
+padding:14px 12px;
+
+text-align:left;
+
+font-size:12px;
+
+text-transform:uppercase;
+
+letter-spacing:.5px;
+
+
+}
+
+
+
+
+.page-listados th:first-child,
+.gerente-container th:first-child,
+.container th:first-child,
+.inventario-container th:first-child,
+.productos-container th:first-child,
+.proveedores-container th:first-child,
+.clientes-container th:first-child {
+
+
+border-radius:16px 0 0 16px;
+
+}
+
+
+
+.page-listados th:last-child,
+.gerente-container th:last-child,
+.container th:last-child,
+.inventario-container th:last-child,
+.productos-container th:last-child,
+.proveedores-container th:last-child,
+.clientes-container th:last-child {
+
+
+border-radius:0 16px 16px 0;
+
+}
+
+
+
+
+
+/* DATOS */
+
+
+.page-listados td,
+.gerente-container td,
+.container td,
+.inventario-container td,
+.productos-container td,
+.inventario-page td,
+.productos-page td,
+.proveedores-container td,
+.clientes-container td,
+.facturas-container td {
+
+
+background:#f8fafc;
+
+padding:14px 12px;
+
+font-size:13px;
+
+color:#111827;
+
+border-top:1px solid rgba(15,23,42,.05);
+
+border-bottom:1px solid rgba(15,23,42,.05);
+
+
+}
+
+
+
+
+
+.page-listados td:first-child,
+.gerente-container td:first-child,
+.container td:first-child,
+.inventario-container td:first-child,
+.productos-container td:first-child,
+.proveedores-container td:first-child,
+.clientes-container td:first-child {
+
+
+border-radius:16px 0 0 16px;
+
+
+}
+
+
+
+
+.page-listados td:last-child,
+.gerente-container td:last-child,
+.container td:last-child,
+.inventario-container td:last-child,
+.productos-container td:last-child,
+.proveedores-container td:last-child,
+.clientes-container td:last-child {
+
+
+border-radius:0 16px 16px 0;
+
+
+}
+
+
+
+
+/* HOVER */
+
+
+.page-listados tr:hover td,
+.gerente-container tr:hover td,
+.container tr:hover td,
+.inventario-container tr:hover td,
+.productos-container tr:hover td,
+.proveedores-container tr:hover td,
+.clientes-container tr:hover td,
+.facturas-container tr:hover td {
+
+
+background:#fff8dc;
+
+transition:.2s ease;
+
+
+}
+
+
+
+
+
+/* ========================= */
+/* BOTONES */
+/* ========================= */
+
+
+.page-listados button,
+.gerente-container button,
+.container button,
+.inventario-container button,
+.productos-container button {
+
+
+border:none;
+
+border-radius:8px;
+
+padding:8px 12px;
+
+background:#e8c860;
+
+color:#111827;
+
+cursor:pointer;
+
+font-weight:700;
+
+font-size:13px;
+
+transition:.2s ease;
+
+
+}
+
+
+
+.page-listados button:hover,
+.gerente-container button:hover,
+.container button:hover,
+.inventario-container button:hover,
+.productos-container button:hover {
+
+
+transform:translateY(-2px);
+
+background:#f0d468;
+
+
+}
+
+
+
+
+.btn-danger {
+
+
+background:#dc2626 !important;
+
+color:white !important;
+
+
+}
+
+
+
+.btn-danger:hover {
+
+
+background:#991b1b !important;
+
+
+}
+
+
+
+
+/* ========================= */
+/* FECHAS */
+/* ========================= */
+
+
+.gerente-container .date-row {
+
+
+display:flex;
+
+gap:12px;
+
+flex-wrap:wrap;
+
+align-items:flex-end;
+
+margin-bottom:12px;
+
+
+}
+
+
+
+
+.gerente-container .date-row label {
+
+
+display:flex;
+
+flex-direction:column;
+
+min-width:170px;
+
+width:100%;
+
+
+}
+
+
+
+
+/* ========================= */
+/* CONTENEDORES */
+/* ========================= */
+
+
+.page-listados,
+.gerente-container,
+.container,
+.proveedores-container,
+.clientes-container,
+.facturas-container,
+.configuracion-container,
+.inventario-container,
+.productos-container {
+
+
+background:#f8fafc;
+
+border-radius:8px;
+
+box-shadow:0 8px 18px rgba(15,23,42,.08);
+
+
+}
+
+
+
+
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+
+@media(max-width:860px){
+
+
+.page-listados,
+.gerente-container,
+.container,
+.inventario-container,
+.productos-container {
+
+
+padding:16px;
+
+
+}
+
+
+
+.page-listados table,
+.gerente-container table,
+.container table,
+.inventario-container table,
+.productos-container table,
+.inventario-page table,
+.productos-page table {
+
+
+display:block;
+
+overflow-x:auto;
+
+white-space:nowrap;
+
+
+}
+.tabla-productos,
+.tabla-inventario {
+
+  width:100%;
+  min-width:850px;
+  border-collapse:separate;
+  border-spacing:0 10px;
+  background:transparent;
+  border:none;
+  margin-bottom:24px;
+
+}
+
+
+.tabla-productos th,
+.tabla-inventario th {
+
+  background:#111827;
+  color:white;
+  padding:14px 12px;
+  text-align:left;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+
+}
+
+
+.tabla-productos td,
+.tabla-inventario td {
+
+  background:#f8fafc;
+  padding:14px 12px;
+  font-size:13px;
+  color:#111827;
+
+}
+
+
+.tabla-productos tr:hover td,
+.tabla-inventario tr:hover td {
+
+  background:#fff8dc;
+  transition:.2s ease;
+
+}
+
+
+}

@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-
-import {
-  Link,
-  useNavigate,
-} from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 function ClienteLogin() {
@@ -14,8 +9,43 @@ function ClienteLogin() {
   const [password, setPassword] = useState("");
   const [passwordNueva, setPasswordNueva] = useState("");
   const [confirmar, setConfirmar] = useState("");
-  const [modo, setModo] = useState("login"); // "login" | "verificar" | "crear"
+  const [modo, setModo] = useState("login"); // "login" | "verificar" | "crear" | "recuperar"
   const [error, setError] = useState("");
+  const [passwordRecuperar, setPasswordRecuperar] = useState("");
+  const [confirmarRecuperar, setConfirmarRecuperar] = useState("");
+
+  // ESTILOS LOCALES
+  const labelStyle = {
+    display: "block",
+    color: "#fff",
+    fontSize: "14px",
+    marginBottom: "6px",
+    textAlign: "left"
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "10px",
+    background: "#3b3b3b",
+    border: "1px solid #555",
+    borderRadius: "5px",
+    color: "#fff",
+    marginBottom: "14px",
+    boxSizing: "border-box"
+  };
+
+  const btnStyle = {
+    width: "100%",
+    padding: "12px",
+    background: "#C9BD86",
+    color: "#1a1a1a",
+    border: "none",
+    borderRadius: "5px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    fontSize: "15px",
+    marginTop: "10px"
+  };
 
   // VERIFICAR IDENTIDAD — NIT + correo
   const handleVerificar = async () => {
@@ -56,7 +86,37 @@ function ClienteLogin() {
     if (data.success) {
       setError("");
       setModo("login");
-      alert("✅ Contraseña creada. Ahora inicia sesión.");
+      alert("Contraseña creada. Ahora inicia sesión.");
+    } else {
+      setError(data.mensaje);
+    }
+  };
+
+  // RECUPERAR CONTRASEÑA
+  const handleRecuperarPassword = async () => {
+    if (!nit || !correo)
+      return setError("Ingresa NIT y correo");
+
+    if (passwordRecuperar.length < 4)
+      return setError("La contraseña debe tener mínimo 4 caracteres");
+
+    if (passwordRecuperar !== confirmarRecuperar)
+      return setError("Las contraseñas no coinciden");
+
+    const res = await fetch("http://localhost/factufast-api/clientes_portal/recuperar_password.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nit, correo, password: passwordRecuperar })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Contraseña actualizada correctamente");
+      setModo("login");
+      setError("");
+      setPasswordRecuperar("");
+      setConfirmarRecuperar("");
     } else {
       setError(data.mensaje);
     }
@@ -114,8 +174,7 @@ function ClienteLogin() {
         </div>
 
         {error && (
-          <p style={{ color: "#ff6b6b", textAlign: "center",
-            fontSize: "13px", marginBottom: "14px" }}>
+          <p style={{ color: "#ff6b6b", textAlign: "center", fontSize: "13px", marginBottom: "14px" }}>
             {error}
           </p>
         )}
@@ -123,25 +182,66 @@ function ClienteLogin() {
         {/* ===== LOGIN NORMAL ===== */}
         {modo === "login" && (
           <>
-            <label style={labelStyle}>NIT</label>
-            <input style={inputStyle} type="text" value={nit}
-              onChange={e => setNit(e.target.value)}
-              placeholder="Tu número de NIT" />
-
-            <label style={labelStyle}>Contraseña</label>
-            <input style={inputStyle} type="password" value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Tu contraseña" />
-
-            <button onClick={handleLogin} style={btnStyle}>
-              Ingresar
+            <button
+              onClick={() => navigate("/")}
+              style={{
+                width: "100%",
+                padding: "10px",
+                background: "transparent",
+                color: "#C9BD86",
+                border: "1px solid #C9BD86",
+                borderRadius: "5px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                fontSize: "14px",
+                marginBottom: "16px"
+              }}
+            >
+              Volver al inicio
             </button>
 
-            <p style={{ textAlign: "center", marginTop: "16px",
-              fontSize: "13px", color: "#aaa" }}>
+            <label style={labelStyle}>NIT</label>
+            <input
+  style={inputStyle}
+  type="text"
+  value={nit}
+
+  onChange={(e)=>{
+
+    const valor = e.target.value;
+
+    if(/^\d*$/.test(valor)){
+
+      setNit(valor);
+
+    }
+
+  }}
+
+  inputMode="numeric"
+
+  pattern="[0-9]*"
+
+  maxLength="10"
+
+  placeholder="Tu número de NIT"
+
+/>
+
+            <label style={labelStyle}>Contraseña</label>
+            <input style={inputStyle} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Tu contraseña" />
+
+            <button onClick={handleLogin} style={btnStyle}>Ingresar</button>
+
+            <p style={{ textAlign: "center", marginTop: "16px", marginBottom: "0px", fontSize: "13px" }}>
+              <span onClick={() => { setModo("recuperar"); setError(""); }} style={{ color: "#C9BD86", cursor: "pointer", textDecoration: "underline" }}>
+                ¿Olvidaste tu contraseña?
+              </span>
+            </p>
+
+            <p style={{ textAlign: "center", marginTop: "12px", fontSize: "13px", color: "#aaa" }}>
               ¿Primera vez?{" "}
-              <span onClick={() => { setModo("verificar"); setError(""); }}
-                style={{ color: "#C9BD86", cursor: "pointer", textDecoration: "underline" }}>
+              <span onClick={() => { setModo("verificar"); setError(""); }} style={{ color: "#C9BD86", cursor: "pointer" }}>
                 Crea tu contraseña aquí
               </span>
             </p>
@@ -151,29 +251,20 @@ function ClienteLogin() {
         {/* ===== VERIFICAR IDENTIDAD ===== */}
         {modo === "verificar" && (
           <>
-            <p style={{ color: "#C9BD86", fontSize: "13px",
-              marginBottom: "14px", textAlign: "center" }}>
+            <p style={{ color: "#C9BD86", fontSize: "13px", marginBottom: "14px", textAlign: "center" }}>
               Ingresa tu NIT y el correo con el que estás registrado
             </p>
 
             <label style={labelStyle}>NIT</label>
-            <input style={inputStyle} type="text" value={nit}
-              onChange={e => setNit(e.target.value)}
-              placeholder="Tu número de NIT" />
+            <input style={inputStyle} type="text" value={nit} onChange={e => setNit(e.target.value)} placeholder="Tu número de NIT" />
 
             <label style={labelStyle}>Correo registrado</label>
-            <input style={inputStyle} type="email" value={correo}
-              onChange={e => setCorreo(e.target.value)}
-              placeholder="Tu correo" />
+            <input style={inputStyle} type="email" value={correo} onChange={e => setCorreo(e.target.value)} placeholder="Tu correo" />
 
-            <button onClick={handleVerificar} style={btnStyle}>
-              Verificar identidad
-            </button>
+            <button onClick={handleVerificar} style={btnStyle}>Verificar</button>
 
-            <p style={{ textAlign: "center", marginTop: "16px",
-              fontSize: "13px", color: "#aaa" }}>
-              <span onClick={() => { setModo("login"); setError(""); }}
-                style={{ color: "#C9BD86", cursor: "pointer", textDecoration: "underline" }}>
+            <p style={{ textAlign: "center", marginTop: "16px", fontSize: "13px" }}>
+              <span onClick={() => { setModo("login"); setError(""); }} style={{ color: "#C9BD86", cursor: "pointer", textDecoration: "underline" }}>
                 ← Volver al login
               </span>
             </p>
@@ -183,76 +274,48 @@ function ClienteLogin() {
         {/* ===== CREAR CONTRASEÑA ===== */}
         {modo === "crear" && (
           <>
-            <p style={{ color: "#4caf50", fontSize: "13px",
-              marginBottom: "14px", textAlign: "center" }}>
-              ✅ Identidad verificada — crea tu contraseña
+            <label style={labelStyle}>Nueva Contraseña</label>
+            <input style={inputStyle} type="password" value={passwordNueva} onChange={e => setPasswordNueva(e.target.value)} placeholder="Mínimo 4 caracteres" />
+
+            <label style={labelStyle}>Confirmar Contraseña</label>
+            <input style={inputStyle} type="password" value={confirmar} onChange={e => setConfirmar(e.target.value)} placeholder="Repite tu contraseña" />
+
+            <button onClick={handleCrearPassword} style={btnStyle}>Guardar contraseña</button>
+          </>
+        )}
+
+        {/* ===== RECUPERAR CONTRASEÑA ===== */}
+        {modo === "recuperar" && (
+          <>
+            <p style={{ color: "#C9BD86", fontSize: "13px", marginBottom: "14px", textAlign: "center" }}>
+              Recuperar contraseña
             </p>
 
+            <label style={labelStyle}>NIT</label>
+            <input style={inputStyle} type="text" value={nit} onChange={(e) => setNit(e.target.value)} placeholder="Tu NIT" />
+
+            <label style={labelStyle}>Correo registrado</label>
+            <input style={inputStyle} type="email" value={correo} onChange={(e) => setCorreo(e.target.value)} placeholder="Tu correo" />
+
             <label style={labelStyle}>Nueva contraseña</label>
-            <input style={inputStyle} type="password" value={passwordNueva}
-              onChange={e => setPasswordNueva(e.target.value)}
-              placeholder="Mínimo 4 caracteres" />
+            <input style={inputStyle} type="password" value={passwordRecuperar} onChange={(e) => setPasswordRecuperar(e.target.value)} placeholder="Nueva contraseña" />
 
             <label style={labelStyle}>Confirmar contraseña</label>
-            <input style={inputStyle} type="password" value={confirmar}
-              onChange={e => setConfirmar(e.target.value)}
-              placeholder="Repite la contraseña" />
+            <input style={inputStyle} type="password" value={confirmarRecuperar} onChange={(e) => setConfirmarRecuperar(e.target.value)} placeholder="Confirmar contraseña" />
 
-            <button onClick={handleCrearPassword} style={btnStyle}>
-              Crear contraseña
-            </button>
+            <button onClick={handleRecuperarPassword} style={btnStyle}>Actualizar contraseña</button>
 
-            <p style={{ textAlign: "center", marginTop: "16px",
-              fontSize: "13px", color: "#aaa" }}>
-              <span onClick={() => { setModo("login"); setError(""); }}
-                style={{ color: "#C9BD86", cursor: "pointer", textDecoration: "underline" }}>
+            <p style={{ textAlign: "center", marginTop: "16px", fontSize: "13px" }}>
+              <span onClick={() => { setModo("login"); setError(""); }} style={{ color: "#C9BD86", cursor: "pointer", textDecoration: "underline" }}>
                 ← Volver al login
               </span>
             </p>
           </>
         )}
 
-        {/* VOLVER AL INICIO */}
-        <div style={{ textAlign: "center", marginTop: "24px" }}>
-          <Link to="/" style={{ color: "#555", fontSize: "12px", textDecoration: "none" }}>
-            ← Volver al inicio
-          </Link>
-        </div>
-
       </div>
     </div>
   );
 }
-
-const labelStyle = {
-  display: "block",
-  color: "#C9BD86",
-  fontSize: "13px",
-  marginBottom: "5px",
-  marginTop: "14px"
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px",
-  borderRadius: "5px",
-  border: "1px solid #8A7700",
-  background: "#1a1a1a",
-  color: "#f1eaea",
-  fontSize: "14px",
-  boxSizing: "border-box"
-};
-
-const btnStyle = {
-  width: "100%",
-  padding: "12px",
-  marginTop: "20px",
-  backgroundColor: "#8A7700",
-  color: "white",
-  border: "none",
-  borderRadius: "5px",
-  fontSize: "15px",
-  cursor: "pointer"
-};
 
 export default ClienteLogin;

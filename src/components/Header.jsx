@@ -13,18 +13,19 @@ function Header() {
   const rol    = usuarioObj.rol    || "";
 
   const cerrarSesion = () => {
+    if (!window.confirm("¿Estás seguro que deseas cerrar sesión?")) return;
     localStorage.removeItem("usuario");
     navigate("/", { replace: true });
   };
 
   return (
-    <div style={{
-      background: "#8a7500",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "15px"
-    }}>
+      <div style={{
+        background: "#8a7500",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "15px"
+      }}>
 
       {/* LOGO */}
       <img src={logo} alt="logo" style={{ width: "90px" }} />
@@ -37,12 +38,8 @@ function Header() {
 
       {/* USUARIO */}
       <div style={{ textAlign: "right", color: "white" }}>
-        <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-          Bienvenido {nombre}
-        </div>
-        <div style={{ fontSize: "14px" }}>
-          Rol: {rol}  {/* ✅ Muestra "Gerente 1", "Administrador" o "Empleado" */}
-        </div>
+        <div style={{ fontSize: "16px", fontWeight: "bold" }}>Bienvenido {nombre}</div>
+        <div style={{ fontSize: "14px" }}>Rol: {rol}</div>
         <img
           src={salir}
           alt="salir"

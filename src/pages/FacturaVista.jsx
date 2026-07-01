@@ -73,72 +73,20 @@ function FacturaVista() {
     });
   };
 
-  // 🔥 ENVIAR CORREO
-  const enviarCorreo = async () => {
-    if (!factura.correo_cliente) {
-      alert("Este cliente no tiene correo registrado.");
-      return;
-    }
-
-    const confirmar = window.confirm(
-      `¿Enviar factura ${numeroFactura} al correo ${factura.correo_cliente}?`
+  // 🔥 ENVIAR POR WHATSAPP
+  const enviarWhatsApp = () => {
+    const telefono = (factura.telefono_cliente || factura.celular_cliente || "").replace(/\D/g, "");
+    const facturaUrl = `${window.location.origin}/factura/${id}`;
+    const mensaje = encodeURIComponent(
+      `Hola ${factura.nombre_cliente || "cliente"}, te comparto la factura ${numeroFactura}.\n\n` +
+      `Puedes verla aquí: ${facturaUrl}\n\nGracias por tu compra.`
     );
-    if (!confirmar) return;
 
-    setEnviando(true);
+    const baseUrl = telefono
+      ? `https://api.whatsapp.com/send?phone=${telefono}&text=${mensaje}`
+      : `https://api.whatsapp.com/send?text=${mensaje}`;
 
-    const input = document.getElementById("factura");
-
-    try {
-      const canvas = await html2canvas(input, { scale: 2 });
-      const pdf = new jsPDF("p", "mm", "a4");
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pdfHeight;
-      }
-
-      const pdfBase64 = pdf.output("datauristring").split(",")[1];
-
-      const response = await fetch("http://127.0.0.1/factufast-api/facturas/enviar_correo.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          correo: factura.correo_cliente,
-          nombre_cliente: factura.nombre_cliente,
-          numero_factura: numeroFactura,
-          pdf_base64: pdfBase64,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.ok) {
-        alert(`✅ Factura enviada correctamente a ${factura.correo_cliente}`);
-      } else {
-        alert(`❌ Error al enviar: ${result.mensaje}`);
-      }
-
-    } catch (err) {
-      console.error(err);
-      alert("❌ Error generando o enviando el PDF");
-    } finally {
-      setEnviando(false);
-    }
+    window.open(baseUrl, "_blank");
   };
 
   if (!factura) {
@@ -181,18 +129,32 @@ function FacturaVista() {
       </div>
 
       <p style={{ fontSize: "12px" }}>
-        Resolución XXX No. 123456789  
+        Resolución XXX No. 123456789
         Rango autorizado: 0001 - 5000
       </p>
 
       {/* CLIENTE */}
       <div className="factura-info">
-        <p><b>Cliente:</b> {factura.nombre_cliente}</p>
-        <p><b>Documento:</b> {factura.nit_cliente}</p>
-        {factura.correo_cliente && (
-          <p><b>Correo:</b> {factura.correo_cliente}</p>
-        )}
-      </div>
+
+  <p>
+    <b>Cliente:</b> {factura.nombre_cliente}
+  </p>
+
+  <p>
+    <b>Documento:</b> {factura.nit_cliente}
+  </p>
+
+  <p>
+    <b>Atendido por:</b> {factura.nombre_usuario}
+  </p>
+
+  {factura.correo_cliente && (
+    <p>
+      <b>Correo:</b> {factura.correo_cliente}
+    </p>
+  )}
+
+</div>
 
       <hr />
 
@@ -264,26 +226,23 @@ function FacturaVista() {
       {/* FOOTER */}
       <hr />
       <p style={{ fontSize: "12px", textAlign: "center" }}>
-        FACTUFAST © 2026 - Sistema de Facturación  
+        FACTUFAST © 2026 - Sistema de Facturación
         <br />
         Luz Mery Julio - Monica Medina
       </p>
 
       {/* BOTONES */}
-      <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
-        <button onClick={imprimir}>🖨 Imprimir</button>
-        <button onClick={descargarPDF}>📄 Descargar PDF</button>
-
-        {/* 🔥 Solo aparece si el cliente tiene correo */}
-        {factura.correo_cliente ? (
-          <button onClick={enviarCorreo} disabled={enviando}>
-            {enviando ? "⏳ Enviando..." : "📧 Enviar por correo"}
+      <div style={{ marginTop: "20px", display: "flex", gap: "10px", flexDirection: "column" }}>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button onClick={imprimir}>🖨 Imprimir</button>
+          <button onClick={descargarPDF}>📄 Descargar PDF</button>
+          <button onClick={enviarWhatsApp}>
+            📲 Enviar por WhatsApp
           </button>
-        ) : (
-          <button disabled style={{ opacity: 0.4, cursor: "not-allowed" }}>
-            📧 Sin correo registrado
-          </button>
-        )}
+        </div>
+        <p style={{ fontSize: "12px", color: "#555", margin: 0 }}>
+          WhatsApp abrirá el chat con un mensaje. Si quieres enviar el PDF, primero descárgalo y adjúntalo manualmente.
+        </p>
       </div>
 
     </div>

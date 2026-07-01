@@ -8,8 +8,9 @@ import {
   useParams,
 } from 'react-router-dom';
 
-function FacturaAnular() {
+import './Listados.css';
 
+function FacturaAnular() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -32,7 +33,6 @@ function FacturaAnular() {
     cargarFactura();
   }, [id]);
 
-  // 🧮 CALCULOS — usa precio_unitario y el iva de cada producto
   const subtotal = detalle.reduce(
     (acc, item) => acc + (Number(item.precio_unitario || 0) * Number(item.cantidad || 0)),
     0
@@ -45,9 +45,7 @@ function FacturaAnular() {
 
   const total = subtotal + iva;
 
-  // ❌ ANULAR FACTURA
   const anularFactura = async () => {
-
     if (factura.estado === "ANULADA") {
       alert("Esta factura ya está anulada");
       return;
@@ -62,12 +60,12 @@ function FacturaAnular() {
 
       if (data.success) {
         setFactura({ ...factura, estado: "ANULADA" });
-        alert("Factura anulada correctamente");
+        alert(data.mensaje || "Factura anulada correctamente");
         setTimeout(() => {
           navigate("/facturas");
         }, 1000);
       } else {
-        alert("No se pudo anular");
+        alert(data.error || "No se pudo anular");
       }
 
     } catch (error) {
@@ -76,27 +74,86 @@ function FacturaAnular() {
     }
   };
 
-  if (!factura) return <p>Cargando...</p>;
+  if (!factura) {
+    return (
+      <div style={{
+        minHeight: "70vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "Arial, Helvetica, sans-serif"
+      }}>
+        <p>Cargando factura...</p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div className="gerente-container">
 
-      <h2>❌ Anular factura #{factura.id_factura}</h2>
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        gap: "16px",
+        marginBottom: "22px"
+      }}>
+        <div>
+          <h2 style={{ marginBottom: "8px" }}>
+            Anular factura #{factura.id_factura}
+          </h2>
+          <p>
+            Revisa el detalle antes de confirmar la anulación. Esta acción devolverá los productos al inventario.
+          </p>
+        </div>
 
-      <p><b>Cliente:</b> {factura.nombre_cliente}</p>
-
-      <p>
-        <b>Estado:</b>{" "}
         <span style={{
-          color: factura.estado === "ANULADA" ? "red" : "green",
-          fontWeight: "bold"
+          display: "inline-block",
+          padding: "8px 12px",
+          borderRadius: "20px",
+          fontSize: "12px",
+          fontWeight: "bold",
+          color: factura.estado === "ANULADA" ? "#991b1b" : "#166534",
+          background: factura.estado === "ANULADA" ? "#fee2e2" : "#dcfce7",
+          border: factura.estado === "ANULADA" ? "1px solid #fecaca" : "1px solid #bbf7d0"
         }}>
           {factura.estado || "ACTIVA"}
         </span>
-      </p>
+      </div>
 
-      <table border="1" width="100%" style={{ marginTop: "20px" }}>
-        <thead style={{ background: "#8a7500", color: "white" }}>
+      <div className="info-box">
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: "16px"
+        }}>
+          <div>
+            <p style={{ margin: "0 0 4px", fontSize: "12px", color: "#64748b" }}>
+              Cliente
+            </p>
+            <strong>{factura.nombre_cliente || "No registrado"}</strong>
+          </div>
+
+          <div>
+            <p style={{ margin: "0 0 4px", fontSize: "12px", color: "#64748b" }}>
+              Factura
+            </p>
+            <strong>#{factura.id_factura}</strong>
+          </div>
+
+          <div>
+            <p style={{ margin: "0 0 4px", fontSize: "12px", color: "#64748b" }}>
+              Estado
+            </p>
+            <strong>{factura.estado || "ACTIVA"}</strong>
+          </div>
+        </div>
+      </div>
+
+      <h3>Detalle de productos</h3>
+
+      <table>
+        <thead>
           <tr>
             <th>Producto</th>
             <th>Cantidad</th>
@@ -123,29 +180,91 @@ function FacturaAnular() {
         </tbody>
       </table>
 
-      <h3>Subtotal: ${subtotal.toLocaleString("es-CO")}</h3>
-      <h3>IVA: ${iva.toLocaleString("es-CO")}</h3>
-      <h2>Total: ${total.toLocaleString("es-CO")}</h2>
+      <div style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        marginTop: "18px"
+      }}>
+        <div style={{
+          width: "100%",
+          maxWidth: "320px",
+          background: "#ffffff",
+          border: "1px solid rgba(15, 23, 42, 0.08)",
+          borderRadius: "8px",
+          padding: "18px",
+          boxShadow: "0 8px 18px rgba(15, 23, 42, 0.08)"
+        }}>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "8px",
+            color: "#475569"
+          }}>
+            <span>Subtotal</span>
+            <strong>${subtotal.toLocaleString("es-CO")}</strong>
+          </div>
 
-      {factura.estado !== "ANULADA" ? (
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "12px",
+            color: "#475569"
+          }}>
+            <span>IVA</span>
+            <strong>${iva.toLocaleString("es-CO")}</strong>
+          </div>
+
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            borderTop: "1px solid rgba(15, 23, 42, 0.12)",
+            paddingTop: "12px",
+            fontSize: "18px",
+            color: "#111827"
+          }}>
+            <span>Total</span>
+            <strong>${total.toLocaleString("es-CO")}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        display: "flex",
+        gap: "10px",
+        justifyContent: "flex-end",
+        marginTop: "22px",
+        flexWrap: "wrap"
+      }}>
         <button
-          onClick={anularFactura}
-          style={{
-            backgroundColor: "red",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            cursor: "pointer",
-            marginTop: "20px"
-          }}
+          type="button"
+          onClick={() => navigate("/facturas")}
+          className="boton-secundario"
         >
-          ❌ Anular factura
+          Volver
         </button>
-      ) : (
-        <p style={{ color: "red", marginTop: "20px", fontWeight: "bold" }}>
-          ⚠️ Esta factura ya fue anulada
-        </p>
-      )}
+
+        {factura.estado !== "ANULADA" ? (
+          <button
+            type="button"
+            onClick={anularFactura}
+            className="btn-danger"
+          >
+            Anular factura
+          </button>
+        ) : (
+          <span style={{
+            color: "#991b1b",
+            background: "#fee2e2",
+            border: "1px solid #fecaca",
+            borderRadius: "6px",
+            padding: "9px 12px",
+            fontWeight: "bold",
+            fontSize: "13px"
+          }}>
+            Esta factura ya fue anulada
+          </span>
+        )}
+      </div>
 
     </div>
   );

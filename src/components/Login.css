@@ -9,7 +9,6 @@ font-family:Arial;
 color:white;
 }
 
-
 /* HEADER */
 
 .login-header{
@@ -29,7 +28,6 @@ color:#C9BD86;
 .login-header p{
 color:#E6DEB5;
 }
-
 
 /* FORM */
 
@@ -70,7 +68,6 @@ color:white;
 outline:2px solid #8A7700;
 }
 
-
 /* BOTON */
 
 .login-btn{
@@ -90,7 +87,6 @@ background:#C9BD86;
 color:black;
 }
 
-
 /* LINKS */
 
 .login-links{
@@ -108,7 +104,6 @@ text-decoration:none;
 .login-links a:hover{
 text-decoration:underline;
 }
-
 
 /* FOOTER */
 

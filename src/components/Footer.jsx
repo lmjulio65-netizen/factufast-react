@@ -7,7 +7,7 @@ function Footer() {
       fontSize: "12px",
       lineHeight: "1.2"
     }}>
-      <p style={{margin:"2px"}}>Contacto: 📞 3024698432</p>
+      <p style={{margin:"2px"}}>CONTACTO: 📞 3024698432/3144571556</p>
       <p style={{margin:"2px"}}>2026 Todos los derechos reservados</p>
       <p style={{margin:"2px"}}>Autores: Luz Mery Julio - Monica Medina</p>
     </div>

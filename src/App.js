@@ -9,7 +9,6 @@ import {
 import Login from './components/Login';
 import PrivateRoute from './components/PrivateRoute';
 import PrivateRouteCliente from './components/PrivateRouteCliente';
-import Register from './components/Register';
 import DashboardLayout from './layout/DashboardLayout';
 import Ayuda from './pages/Ayuda';
 import ClienteFacturaDetalle from './pages/ClienteFacturaDetalle';
@@ -28,29 +27,25 @@ import ListadoFacturas from './pages/ListadoFacturas';
 import Productos from './pages/Productos';
 import Proveedores from './pages/Proveedores';
 import RecuperarClave from './pages/RecuperarClave';
-import RecuperarUsuario from './pages/RecuperarUsuario';
 import Reportes from './pages/Reportes';
-import Servicios from './pages/Servicios';
+import CrearContrasena from './pages/CrearContrasena';
+
+import SessionTimeout from "./components/SessionTimeout";
 
 function App() {
   return (
     <BrowserRouter>
+
+      <SessionTimeout />
+
       <Routes>
 
         {/* 🔓 PÚBLICAS */}
         <Route path="/"                  element={<Home />} />
-        <Route path="/servicios"         element={<Servicios />} />
         <Route path="/ayuda"             element={<Ayuda />} />
         <Route path="/login"             element={<Login />} />
-        <Route path="/recuperar-usuario" element={<RecuperarUsuario />} />
         <Route path="/recuperar-clave"   element={<RecuperarClave />} />
-
-        {/* 🔒 Registro solo para gerente */}
-        <Route path="/registro" element={
-          <PrivateRoute rolPermitido="Gerente 1">
-            <Register />
-          </PrivateRoute>
-        }/>
+        <Route path="/crear-contrasena"  element={<CrearContrasena />} />
 
         {/* 🚫 Sin permiso */}
         <Route path="/sin-permiso" element={
@@ -62,16 +57,27 @@ function App() {
 
         {/* 👤 PORTAL CLIENTE */}
         <Route path="/cliente/login" element={<ClienteLogin />} />
+
         <Route path="/cliente/facturas" element={
-          <PrivateRouteCliente><ClienteFacturas /></PrivateRouteCliente>
+          <PrivateRouteCliente>
+            <ClienteFacturas />
+          </PrivateRouteCliente>
         }/>
+
         <Route path="/cliente/factura/:id" element={
-          <PrivateRouteCliente><ClienteFacturaDetalle /></PrivateRouteCliente>
+          <PrivateRouteCliente>
+            <ClienteFacturaDetalle />
+          </PrivateRouteCliente>
         }/>
 
         {/* 🧾 FACTURAS FUERA DEL PANEL */}
-        <Route path="/factura/:id"          element={<FacturaVista />} />
-        <Route path="/factura/anular/:id"   element={<FacturaAnular />} />
+        <Route path="/factura/:id" element={<FacturaVista />} />
+
+        <Route path="/factura/anular/:id" element={
+          <PrivateRoute rolPermitido="Gerente 1">
+            <FacturaAnular />
+          </PrivateRoute>
+        } />
 
         {/* 🧑‍💼 PANEL GERENTE */}
         <Route path="/gerente" element={
@@ -79,16 +85,17 @@ function App() {
             <DashboardLayout />
           </PrivateRoute>
         }>
-          <Route index                    element={<Gerente />} />
-          <Route path="dashboard"         element={<Dashboard />} />
-          <Route path="facturas"          element={<Facturas />} />
-          <Route path="listado-facturas"  element={<ListadoFacturas />} />
-          <Route path="productos"         element={<Productos />} />
-          <Route path="inventario"        element={<Inventario />} />
-          <Route path="reportes"          element={<Reportes />} />
-          <Route path="clientes"          element={<Clientes />} />
-          <Route path="configuracion"     element={<Configuracion />} />
-          <Route path="proveedores"       element={<Proveedores />} />
+
+          <Route index element={<Gerente />} />
+          <Route path="proveedores" element={<Proveedores />} />
+          <Route path="productos" element={<Productos />} />
+          <Route path="inventario" element={<Inventario />} />
+          <Route path="clientes" element={<Clientes />} />
+          <Route path="facturas" element={<Facturas />} />
+          <Route path="listado-facturas" element={<ListadoFacturas />} />
+          <Route path="reportes" element={<Reportes />} />
+          <Route path="configuracion" element={<Configuracion />} />
+
         </Route>
 
         {/* 🧑‍💻 PANEL ADMINISTRADOR */}
@@ -97,14 +104,17 @@ function App() {
             <DashboardLayout />
           </PrivateRoute>
         }>
-          <Route index                    element={<Reportes />} />
-          <Route path="reportes"          element={<Reportes />} />
-          <Route path="facturas"          element={<Facturas />} />
-          <Route path="listado-facturas"  element={<ListadoFacturas />} />
-          <Route path="productos"         element={<Productos />} />
-          <Route path="inventario"        element={<Inventario />} />
-          <Route path="clientes"          element={<Clientes />} />
-          <Route path="proveedores"       element={<Proveedores />} />
+
+          <Route index element={<Reportes />} />
+          <Route path="proveedores" element={<Proveedores />} />
+          <Route path="productos" element={<Productos />} />
+          <Route path="inventario" element={<Inventario />} />
+          <Route path="clientes" element={<Clientes />} />
+          <Route path="facturas" element={<Facturas />} />
+          <Route path="listado-facturas" element={<ListadoFacturas />} />
+          <Route path="reportes" element={<Reportes />} />
+          <Route path="configuracion" element={<Configuracion />} />
+
         </Route>
 
         {/* 👨‍🔧 PANEL EMPLEADO */}
@@ -113,15 +123,17 @@ function App() {
             <DashboardLayout />
           </PrivateRoute>
         }>
-          <Route index            element={<Facturas />} />
-          <Route path="facturas"  element={<Facturas />} />
-          <Route path="clientes"  element={<Clientes />} />
-          <Route path="productos" element={<Productos />} />
-          <Route path="proveedores" element={<Proveedores />} />
-          <Route path="inventario"  element={<Inventario />} />
+
+          <Route index element={<Facturas />} />
+          <Route path="inventario" element={<Inventario />} />
+          <Route path="clientes" element={<Clientes />} />
+          <Route path="facturas" element={<Facturas />} />
+          <Route path="listado-facturas" element={<ListadoFacturas />} />
+
         </Route>
 
       </Routes>
+
     </BrowserRouter>
   );
 }

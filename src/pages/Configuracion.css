@@ -1,0 +1,486 @@
+.config-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px;
+  color: #111827;
+}
+
+.config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.config-header h2 {
+  margin: 0 0 6px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
+}
+
+.config-header p {
+  margin: 0;
+  color: #475569;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.config-header button,
+.table-actions button {
+  border: 0;
+  border-radius: 6px;
+  padding: 9px 13px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.config-header button {
+  background: #c9bd86;
+  color: #111827;
+}
+
+.btn-secondary {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+
+/* ========================= */
+/* FORMULARIO REGISTRAR USUARIO */
+/* ========================= */
+
+.config-form {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 25px;
+  background: #ffffff;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.config-form-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.config-form-title h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #111827;
+}
+
+.config-form-title span {
+  color: #475569;
+  font-size: 13px;
+}
+
+
+.config-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+
+.config-form-grid input,
+.config-form-grid select,
+.config-toolbar input {
+
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid rgba(15, 23, 42, 0.12);
+
+  border-radius: 6px;
+
+  padding: 10px 12px;
+
+  min-height: 40px;
+
+  font-size: 14px;
+
+  outline:none;
+
+  background:white;
+
+  color:#111827;
+
+}
+
+
+.config-form-grid input:focus,
+.config-form-grid select:focus,
+.config-toolbar input:focus {
+
+  border-color:#c9bd86;
+
+  box-shadow:0 0 0 3px rgba(201,189,134,.18);
+
+}
+
+
+.config-actions {
+
+  display:flex;
+
+  justify-content:center;
+
+  margin-top:20px;
+
+}
+
+
+.btn-primary {
+
+  min-width:220px;
+
+  height:48px;
+
+  padding:0 28px;
+
+  border:none;
+
+  border-radius:8px;
+
+  background:#e8c860;
+
+  color:#475569;
+
+  font-size:16px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  box-shadow:0 6px 18px rgba(15,23,42,.12);
+
+  transition:.2s ease;
+
+}
+
+
+.btn-primary:hover {
+
+  background:#d4b149;
+
+  transform:translateY(-2px);
+
+}
+
+
+.btn-primary:focus {
+
+  outline:3px solid rgba(75,85,99,.18);
+
+}
+
+
+.config-actions .btn-primary.btn-registrar {
+
+  background:#e8c860 !important;
+
+  color:#475569 !important;
+
+}
+
+
+
+/* ========================= */
+/* BUSCADOR */
+/* ========================= */
+
+
+.config-toolbar {
+
+  max-width:520px;
+
+  margin-bottom:12px;
+
+}
+
+
+
+/* ========================= */
+/* TABLA MEJORADA */
+/* ========================= */
+
+
+.config-table-wrap {
+
+  overflow-x:auto;
+
+  background:#ffffff;
+
+  border-radius:16px;
+
+  border:1px solid rgba(15,23,42,.08);
+
+  box-shadow:0 10px 25px rgba(15,23,42,.08);
+
+  padding:10px;
+
+}
+
+
+.config-table {
+
+  width:100%;
+
+  min-width:950px;
+
+  border-collapse:separate;
+
+  border-spacing:0 8px;
+
+  font-size:14px;
+
+}
+
+
+
+.config-table th {
+
+  background:#111827;
+
+  color:white;
+
+  padding:14px 12px;
+
+  text-align:left;
+
+  font-size:12px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.5px;
+
+}
+
+
+.config-table th:first-child {
+
+  border-radius:12px 0 0 12px;
+
+}
+
+
+.config-table th:last-child {
+
+  border-radius:0 12px 12px 0;
+
+}
+
+
+
+.config-table td {
+
+  background:#f8fafc;
+
+  padding:14px 12px;
+
+  color:#111827;
+
+  border-top:1px solid rgba(15,23,42,.05);
+
+  border-bottom:1px solid rgba(15,23,42,.05);
+
+}
+
+
+.config-table td:first-child {
+
+  border-radius:12px 0 0 12px;
+
+}
+
+
+.config-table td:last-child {
+
+  border-radius:0 12px 12px 0;
+
+}
+
+
+
+.config-table tr:hover td {
+
+  background:#fff8dc;
+
+  transition:.2s ease;
+
+}
+
+
+
+.rol-badge {
+
+  display:inline-flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:999px;
+
+  padding:6px 12px;
+
+  font-size:12px;
+
+  font-weight:700;
+
+}
+
+
+
+.rol-1 {
+
+  background:#e6f4ea;
+
+  color:#1b6e32;
+
+}
+
+
+.rol-2 {
+
+  background:#e8f0fe;
+
+  color:#174ea6;
+
+}
+
+
+.rol-3 {
+
+  background:#fff4e5;
+
+  color:#9a5b00;
+
+}
+
+
+
+.table-actions {
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:8px;
+
+}
+
+
+
+.table-actions button {
+
+  border:none;
+
+  border-radius:8px;
+
+  padding:8px 12px;
+
+  font-size:12px;
+
+  font-weight:700;
+
+  transition:.2s ease;
+
+}
+
+
+
+.table-actions button:hover {
+
+  transform:translateY(-2px);
+
+}
+
+
+
+.table-actions .btn-danger {
+
+  background:#dc2626;
+
+  color:white;
+
+}
+
+
+
+.table-actions .btn-warning {
+
+  background:#e8c860;
+
+  color:#111827;
+
+}
+
+
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+
+@media (max-width:860px){
+
+
+.config-page{
+
+padding:16px;
+
+}
+
+
+.config-header{
+
+align-items:flex-start;
+
+flex-direction:column;
+
+}
+
+
+.config-header button{
+
+width:100%;
+
+}
+
+
+.config-form-grid{
+
+grid-template-columns:1fr;
+
+}
+
+
+.config-actions{
+
+flex-direction:column;
+
+align-items:center;
+
+}
+
+
+.config-actions button{
+
+width:100%;
+
+max-width:250px;
+
+}
+
+
+}

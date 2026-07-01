@@ -1,3 +1,5 @@
+import './Gerente.css';
+
 import {
   useEffect,
   useState,
@@ -18,11 +20,17 @@ function Gerente() {
       })
       .catch(error => console.error(error));
 
-    // 🔹 PRODUCTOS
-    fetch("http://localhost/factufast-api/productos/listar.php")
+    // 🔹 INVENTARIO REAL
+    fetch("http://localhost/factufast-api/inventario/listar.php")
       .then(res => res.json())
       .then(data => {
-        setProductos(data);
+
+        if (Array.isArray(data)) {
+          setProductos(data);
+        } else {
+          setProductos(data.inventario || data.productos || []);
+        }
+
       })
       .catch(error => console.error(error));
 
@@ -33,23 +41,36 @@ function Gerente() {
     <div className="gerente-container">
 
       <h2>Panel del Gerente</h2>
-      <p>Bienvenido a FACTUSYS</p>
+
+      <p>
+        Bienvenido a <strong>FACTUFAST</strong>
+      </p>
 
       {/* TARJETAS */}
-      <div className="cards">
+      <div className="resumen-container">
 
-        <div className="card">
-          <h3>Inventario</h3>
-          <p>
-            ${Number(totales.valor_inventario || 0).toLocaleString("es-CO")}
-          </p>
-        </div>
+        <div className="cards">
 
-        <div className="card">
-          <h3>Ganancia total</h3>
-          <p>
-            ${Number(totales.ganancia_total || 0).toLocaleString("es-CO")}
-          </p>
+          <div className="card">
+
+            <h3>Inventario</h3>
+
+            <p>
+              ${Number(totales.valor_inventario || 0).toLocaleString("es-CO")}
+            </p>
+
+          </div>
+
+          <div className="card">
+
+            <h3>Ganancia total</h3>
+
+            <p>
+              ${Number(totales.ganancia_total || 0).toLocaleString("es-CO")}
+            </p>
+
+          </div>
+
         </div>
 
       </div>
@@ -60,10 +81,15 @@ function Gerente() {
       <table>
 
         <thead>
+
           <tr>
+
             <th>Nombre</th>
-            <th>Stock mínimo</th>
+
+            <th>Stock</th>
+
           </tr>
+
         </thead>
 
         <tbody>
@@ -71,16 +97,35 @@ function Gerente() {
           {productos.length === 0 ? (
 
             <tr>
-              <td colSpan="2">No hay productos registrados</td>
+
+              <td colSpan="2">
+                No hay productos registrados
+              </td>
+
             </tr>
 
           ) : (
 
             productos.map((p, index) => (
+
               <tr key={index}>
-                <td>{p.nombre_producto}</td>
-                <td>{p.stock_minimo}</td>
+
+                <td>
+                  {p.nombre_producto}
+                </td>
+
+                <td>
+                  {
+                    p.cantidad ||
+                    p.stock ||
+                    p.stock_producto ||
+                    p.existencias ||
+                    0
+                  }
+                </td>
+
               </tr>
+
             ))
 
           )}

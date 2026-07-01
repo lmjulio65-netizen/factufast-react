@@ -1,37 +1,108 @@
+:root {
+  --bg: #f2f4f8;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --surface-lighter: #eef2f7;
+  --text: #111827;
+  --muted: #475569;
+  --gold: #e8c860;
+  --gold-dark: #d4b149;
+  --border: rgba(15, 23, 42, 0.08);
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #f5f2e9;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  background-color: var(--bg);
 }
 
 h1, h2 {
-  color: #2c2c2c;
+  color: var(--text);
 }
 
 form {
-  background: #f5f1dc;
+  background: var(--surface);
   padding: 15px;
-  width: 300px;
-  margin: 30px auto;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  text-align: center;
+  width: 100%;
+  max-width: 420px;
+  margin: 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  text-align: left;
+  border: 1px solid var(--border);
 }
 
-input {
-  width: 90%;
-  padding: 8px;
-  margin: 6px 0;
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 6px;
+  box-sizing: border-box;
 }
 
 button {
-  background-color: #c2a36b;
-  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  background-color: var(--gold);
+  color: #111827;
   border: none;
-  padding: 8px 15px;
+  padding: 10px 16px;
+  border-radius: 6px;
   cursor: pointer;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
 }
 
 button:hover {
-  background-color: #a88b55;
+  background-color: var(--gold-dark);
+}
+
+.btn-registrar {
+  background-color: var(--gold);
+  color: #111827;
+  border-radius: 8px;
+  padding: 12px 22px;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-registrar:hover {
+  background-color: var(--gold-dark);
+}
+
+.btn-large {
+  min-width: 190px;
+  padding: 14px 24px;
+  font-size: 1rem;
+}
+
+table {
+  font-family: inherit;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+/* Global typography rules: make all h2 and p consistent */
+h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 26px;
+  color: var(--text);
+  font-weight: 700;
+  text-align: left;
+  margin: 0 0 8px;
+}
+
+p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 400;
+  text-align: left;
+  margin: 0 0 8px;
 }

@@ -1,125 +1,328 @@
 import './Login.css';
-
 import React, { useState } from 'react';
-
-import {
-  Link,
-  useNavigate,
-} from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
-function Login() {
+function Login(){
 
-  const [usuario, setUsuario]     = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const navigate = useNavigate();
+const [usuario,setUsuario]=useState("");
+const [contrasena,setContrasena]=useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const navigate=useNavigate();
 
-    const formData = new FormData();
-    formData.append("usuario", usuario);
-    formData.append("contrasena", contrasena);
+const handleSubmit=async(e)=>{
 
-    try {
-      const response = await fetch("http://localhost/factufast-api/login.php", {
-        method: "POST",
-        body: formData
-      });
+e.preventDefault();
 
-      const data = await response.json();
-      console.log("Respuesta del servidor:", data);
+try{
 
-      if (data.success) {
+const response=await fetch(
+"http://localhost/factufast-api/login.php",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+usuario,
+contrasena
+})
+}
+);
 
-        // ✅ Guardar TODO en un solo objeto
-        const usuarioObj = {
-          id:     data.id_usuario,
-          nombre: data.nombre_usuario,
-          rol:    data.nombre_rol
-        };
+const data=await response.json();
 
-        localStorage.setItem("usuario", JSON.stringify(usuarioObj));
+console.log(data);
 
-        // ✅ Cada rol va a su propia ruta
-        const rol = data.nombre_rol;
+if(data.success){
 
-        if (rol === "Gerente 1") {
-          navigate("/gerente");
-        } else if (rol === "Administrador") {
-          navigate("/admin");
-        } else if (rol === "Empleado") {
-          navigate("/empleado");
-        } else {
-          navigate("/");
-        }
+const usuarioObj={
+id:data.id_usuario,
+nombre:data.nombre_usuario,
+rol:data.nombre_rol
+};
 
-      } else {
-        alert(data.mensaje);
-      }
+localStorage.setItem(
+"usuario",
+JSON.stringify(usuarioObj)
+);
 
-    } catch (error) {
-      console.error(error);
-      alert("Error conectando con el servidor");
-    }
-  };
+if(data.nombre_rol==="Gerente 1"){
 
-  return (
-    <div className="login-container">
+navigate("/gerente");
 
-      <header className="login-header">
-        <img src={logo} alt="logo" className="login-logo"/>
-        <h1>Bienvenido a FACTUFAST</h1>
-        <p>Facturación rápida, negocios sin límites</p>
-      </header>
+}else if(data.nombre_rol==="Administrador"){
 
-      <div className="login-form-wrapper">
-        <form className="login-form" onSubmit={handleSubmit}>
+navigate("/admin");
 
-          <h2>Iniciar Sesión</h2>
+}else if(data.nombre_rol==="Empleado"){
 
-          <label>Usuario</label>
-          <input
-            type="text"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
-            required
-          />
+navigate("/empleado");
 
-          <label>Contraseña</label>
-          <input
-            type="password"
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
-            required
-          />
+}else{
 
-          <button type="submit" className="login-btn">
-            Ingresar
-          </button>
+navigate("/");
 
-          <div style={{ marginTop: "10px" }}>
-            <a href="/recuperar-usuario">¿Olvidaste tu usuario?</a>
-            <br/>
-            <a href="/recuperar-clave">¿Olvidaste tu contraseña?</a>
-          </div>
+}
 
-          <div className="login-links">
-            <Link to="/">Salir</Link>
-          </div>
+}else{
 
-        </form>
-      </div>
+alert(data.mensaje);
 
-      <footer className="login-footer">
-        <p>Contacto: 3024698432</p>
-        <p>2026 TODOS LOS DERECHOS RESERVADOS</p>
-        <p>AUTORES: LUZ MERY JULIO - MONICA MEDINA</p>
-      </footer>
+}
 
-    </div>
-  );
+}catch(error){
+
+console.error(error);
+
+alert("Error conectando con el servidor");
+
+}
+
+};
+
+return(
+
+<div
+style={{
+minHeight:"100vh",
+background:"#1a1a1a",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+fontFamily:"Arial, Helvetica, sans-serif"
+}}
+>
+
+<div
+style={{
+background:"#2b2b2b",
+border:"1px solid #8A7700",
+borderRadius:"10px",
+padding:"40px",
+width:"100%",
+maxWidth:"400px",
+boxShadow:"0 8px 30px rgba(0,0,0,0.5)"
+}}
+>
+
+<div
+style={{
+textAlign:"center",
+marginBottom:"20px"
+}}
+>
+
+<img
+src={logo}
+alt="logo"
+style={{
+width:"55px",
+marginBottom:"8px"
+}}
+/>
+
+<h1
+style={{
+color:"#C9BD86",
+fontSize:"28px",
+letterSpacing:"2px",
+margin:0
+}}
+>
+FACTUFAST
+</h1>
+
+<p
+style={{
+color:"#aaa",
+fontSize:"13px"
+}}
+>
+Sistema administrativo
+</p>
+
+</div>
+
+<h2
+style={{
+color:"#C9BD86",
+textAlign:"center",
+marginBottom:"25px"
+}}
+>
+Iniciar Sesión
+</h2>
+
+<form onSubmit={handleSubmit}>
+
+<label
+style={{
+color:"#fff",
+fontSize:"14px",
+display:"block",
+marginBottom:"6px"
+}}
+>
+Usuario
+</label>
+
+<input
+
+type="text"
+
+value={usuario}
+
+onChange={(e)=>{
+
+const valor=e.target.value;
+
+if(/^\d*$/.test(valor)){
+
+setUsuario(valor);
+
+}
+
+}}
+
+inputMode="numeric"
+
+pattern="[0-9]*"
+
+maxLength="20"
+
+style={{
+width:"100%",
+padding:"11px",
+background:"#3b3b3b",
+border:"1px solid #555",
+borderRadius:"5px",
+color:"#fff",
+marginBottom:"14px",
+boxSizing:"border-box"
+}}
+
+required
+
+/>
+
+<label
+style={{
+color:"#fff",
+fontSize:"14px",
+display:"block",
+marginBottom:"6px"
+}}
+>
+Contraseña
+</label>
+
+<input
+
+type="password"
+
+value={contrasena}
+
+onChange={(e)=>setContrasena(e.target.value)}
+
+style={{
+width:"100%",
+padding:"11px",
+background:"#3b3b3b",
+border:"1px solid #555",
+borderRadius:"5px",
+color:"#fff",
+marginBottom:"20px",
+boxSizing:"border-box"
+}}
+
+required
+
+/>
+
+<button
+
+type="submit"
+
+style={{
+width:"100%",
+padding:"12px",
+background:"#C9BD86",
+color:"#1a1a1a",
+border:"none",
+borderRadius:"5px",
+fontWeight:"bold",
+cursor:"pointer",
+fontSize:"15px"
+}}
+
+>
+Ingresar
+</button>
+
+<div
+style={{
+textAlign:"center",
+marginTop:"18px",
+fontSize:"13px"
+}}
+>
+
+<Link
+to="/recuperar-clave"
+style={{
+color:"#C9BD86",
+textDecoration:"underline",
+display:"block",
+marginBottom:"10px"
+}}
+>
+¿Olvidaste tu contraseña?
+</Link>
+
+<Link
+to="/crear-contrasena"
+style={{
+color:"#C9BD86",
+textDecoration:"underline",
+display:"block"
+}}
+>
+Crear contraseña inicial
+</Link>
+
+</div>
+
+<button
+
+type="button"
+
+onClick={()=>navigate("/")}
+
+style={{
+width:"100%",
+padding:"10px",
+background:"transparent",
+color:"#C9BD86",
+border:"1px solid #C9BD86",
+borderRadius:"5px",
+fontWeight:"bold",
+cursor:"pointer",
+marginTop:"18px"
+}}
+
+>
+Salir
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+);
+
 }
 
 export default Login;

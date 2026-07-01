@@ -2,64 +2,91 @@
 /* CONTENEDOR GENERAL */
 /* ===================================================== */
 
-.home{
-margin:0;
-padding:0;
-font-family:Arial, Helvetica, sans-serif;
-color:#f1eaea;
-}
+.home {
 
+  margin:0;
 
+  padding:0;
 
-/* ===================================================== */
-/* HERO (SECCION PRINCIPAL CON IMAGEN) */
-/* ===================================================== */
+  font-family:Arial, Helvetica, sans-serif;
 
-.hero{
-
-height:50vh;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-text-align:center;
-
-background-image:url("../assets/hero.jpg");
-
-/* controla el tamaño de la imagen */
-
-background-size:cover;
-
-/* controla qué parte de la imagen se ve */
-
-background-position:center 75%;
-
-background-repeat:no-repeat;
-
-position:relative;
+  color:#f1eaea;
 
 }
 
 
 
 /* ===================================================== */
-/* OSCURECER LA IMAGEN */
+/* HERO */
 /* ===================================================== */
-/* cambia 0.80 si quieres más claro u oscuro */
 
-.hero::before{
 
-content:"";
+.hero {
 
-position:absolute;
-top:0;
-left:0;
 
-width:100%;
-height:100%;
+  height:48vh;
 
-background:rgba(0,0,0,0.80);
+
+  display:flex;
+
+
+  align-items:center;
+
+
+  justify-content:center;
+
+
+  text-align:center;
+
+
+
+  background-image:url("../assets/hero.jpg");
+
+
+  background-size:cover;
+
+
+  background-position:center 75%;
+
+
+  background-repeat:no-repeat;
+
+
+
+  position:relative;
+
+
+}
+
+
+
+/* OSCURECER IMAGEN */
+
+
+.hero::before {
+
+
+  content:"";
+
+
+  position:absolute;
+
+
+  top:0;
+
+
+  left:0;
+
+
+  width:100%;
+
+
+  height:100%;
+
+
+
+  background:rgba(0,0,0,0.80);
+
 
 }
 
@@ -69,112 +96,128 @@ background:rgba(0,0,0,0.80);
 /* BARRA SUPERIOR */
 /* ===================================================== */
 
-.top-bar{
 
-position:absolute;
+.top-bar {
 
-top:10px;
-left:0;
 
-width:100%;
+  position:absolute;
 
-display:flex;
-align-items:center;
-justify-content:center;
 
-gap:15px;
+  top:12px;
 
-z-index:3;
+
+  left:0;
+
+
+  width:100%;
+
+
+
+  display:flex;
+
+
+  align-items:center;
+
+
+  justify-content:center;
+
+
+
+  gap:15px;
+
+
+  z-index:3;
+
 
 }
 
 
 
-/* ===================================================== */
 /* LOGO */
-/* ===================================================== */
 
-.logo-img{
 
-width:40px;
+.logo-img {
+
+
+  width:55px;
+
+
+  filter:drop-shadow(0 5px 10px rgba(0,0,0,.5));
+
 
 }
 
 
 
-/* ===================================================== */
-/* TITULO PRINCIPAL FACTUFAST */
-/* ===================================================== */
+/* TITULO */
 
-.logo-text{
 
-color:#C9BD86;
+.logo-text {
 
-font-size:54px;
 
-letter-spacing:3px;
+  color:#C9BD86;
 
-margin:0;
+
+  font-size:52px;
+
+
+  letter-spacing:4px;
+
+
+  margin:0;
+
+
+
+  text-shadow:0 5px 15px rgba(0,0,0,.5);
+
 
 }
 
 
 
-/* ===================================================== */
 /* ESLOGAN */
-/* ===================================================== */
 
-.slogan{
 
-font-size:23px;
+.slogan {
 
-margin-top:2px;
+
+  font-size:20px;
+
+
+  margin-top:3px;
+
+
+  color:#f1eaea;
+
 
 }
 
 
 
 /* ===================================================== */
-/* CONTENIDO CENTRAL HERO */
+/* CONTENIDO HERO */
 /* ===================================================== */
 
-.hero-content{
 
-position:relative;
+.hero-content {
 
-z-index:2;
 
-max-width:600px;
+  position:relative;
 
-padding:10px;
 
-}
+  z-index:2;
 
 
 
-/* ===================================================== */
-/* TITULO SECUNDARIO */
-/* ===================================================== */
+  max-width:650px;
 
-.hero-content h2{
 
-font-size:32px;
-
-color:#C9BD86;
-
-margin-bottom:10px;
-
-}
+  padding:10px;
 
 
 
-/* ===================================================== */
-/* TEXTO DESCRIPTIVO */
-/* ===================================================== */
+  margin-top:45px;
 
-.hero-content p{
-
-font-size:12px;
 
 }
 
@@ -184,234 +227,489 @@ font-size:12px;
 /* BOTONES */
 /* ===================================================== */
 
-.buttons{
 
-margin-top:12px;
+.buttons {
 
-display:flex;
 
-justify-content:center;
+  margin-top:20px;
 
-gap:15px;
+
+
+  display:flex;
+
+
+  justify-content:center;
+
+
+
+  gap:18px;
+
 
 }
 
 
 
-/* ===================================================== */
-/* BOTON PRINCIPAL */
-/* ===================================================== */
+/* BOTONES GENERALES */
 
-.btn-primary{
 
-background:#8A7700;
-
-border:none;
-
-padding:13px 20px;
-
-color:white;
-
-font-size:14px;
-
-cursor:pointer;
-
-border-radius:5px;
-
-transition:0.3s;
-
-}
-
-
-
-/* EFECTO AL PASAR EL MOUSE */
-
-.btn-primary:hover{
-
-background:#C9BD86;
-color:black;
-
-}
-
-
-
-/* ===================================================== */
-/* BOTON SECUNDARIO */
-/* ===================================================== */
-
-.btn-secondary{
-
-background:transparent;
-
-border:2px solid #C9BD86;
-
-color:#C9BD86;
-
-padding:10px 20px;
-
-font-size:14px;
-
-cursor:pointer;
-
-border-radius:5px;
-
-transition:0.3s;
-
-}
-
-
-
-/* EFECTO BOTON SERVICIOS */
-
-.btn-secondary:hover{
-
-background:#C9BD86;
-color:black;
-
-}
-
-
-
-/* ===================================================== */
-/* SECCION SERVICIOS */
-/* ===================================================== */
-/* PANEL DE TARJETAS DE SERVICIOS */
-.services{
-
-background:#313131;
-
-padding:10px 20px;
-
-text-align:center;
-
-}
-
-
-
-/* TITULO SERVICIOS */
-
-.services h2{
-
-color:#C9BD86;
-
-font-size:22px;
-
-margin-bottom:30px;
-
-}
-
-
-
-/* ===================================================== */
-/* CONTENEDOR TARJETAS */
-/* ===================================================== */
-
-.services-container{
-
-display:flex;
-
-justify-content:center;
-
-gap:23px;
-
-flex-wrap:wrap;
-
-}
-
-
-
-/* ===================================================== */
-/* TARJETAS */
-/* ===================================================== */
-
-.card{
-
-background:#e8e6e0; /* color claro elegante */
-
-padding:18px;
-
-width:180px;
-
-border-radius:8px;
-
-transition:0.3s;
-
-box-shadow:0 4px 10px rgba(0,0,0,0.3);
-
-}
-
-
-
-/* EFECTO TARJETA */
-
-.card:hover{
-
-background:#C9BD86;
-
-transform:scale(1.05);
-
-}
-
-
-
-/* ===================================================== */
-/* TITULO TARJETA */
-/* ===================================================== */
-
-.card h3{
-
-color:#827416;
-
-font-size:15px;
-
-margin-bottom:6px;
-
-}
-
-
-
-/* ===================================================== */
-/* TEXTO TARJETA */
-/* ===================================================== */
-
-.card p{
-
-color:#2b2b2b;
-
-font-size:14px;
-
-}
-
-/* BOTON PORTAL CLIENTE */
+.btn-primary,
+.btn-secondary,
 .btn-cliente {
-  background: transparent;
-  border: 2px solid #ffffff55;
-  color: #f1eaea;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s;
+
+
+  padding:12px 28px;
+
+
+
+  font-size:16px;
+
+
+  font-weight:700;
+
+
+
+  cursor:pointer;
+
+
+
+  border-radius:30px;
+
+
+
+  transition:.35s;
+
+
+
+  min-width:180px;
+
+
+
+  display:flex;
+
+
+  justify-content:center;
+
+
+  align-items:center;
+
+
 }
+
+
+
+/* ===================================================== */
+/* LOGIN */
+/* ===================================================== */
+
+
+.btn-primary {
+
+
+  background:linear-gradient(
+
+  135deg,
+
+  #C9BD86,
+
+  #8A7700
+
+  );
+
+
+
+  border:none;
+
+
+
+  color:#111;
+
+
+
+  box-shadow:
+
+  0 8px 20px rgba(201,189,134,.35);
+
+
+}
+
+
+
+.btn-primary:hover {
+
+
+  transform:translateY(-4px);
+
+
+
+  box-shadow:
+
+  0 15px 30px rgba(201,189,134,.55);
+
+
+}
+
+
+
+/* ===================================================== */
+/* PORTAL CLIENTE */
+/* ===================================================== */
+
+
+.btn-cliente {
+
+
+  background:transparent;
+
+
+
+  border:2px solid #C9BD86;
+
+
+
+  color:#C9BD86;
+
+
+
+}
+
+
 
 .btn-cliente:hover {
-  background: #ffffff22;
-  border-color: #C9BD86;
-  color: #C9BD86;
-}      
+
+
+  background:#C9BD86;
+
+
+
+  color:#111;
+
+
+
+  transform:translateY(-4px);
+
+
+}
+
+
+
+/* LINKS */
+
+
+.buttons a {
+
+
+  text-decoration:none;
+
+
+}
+
+
+
+/* ===================================================== */
+/* SERVICIOS */
+/* ===================================================== */
+
+
+.servicios {
+
+
+  background:linear-gradient(
+
+  180deg,
+
+  #313131 0%,
+
+  #252525 100%
+
+  );
+
+
+
+  padding:30px 20px;
+
+
+}
+
+
+
+
+.servicios-grid {
+
+
+  display:flex;
+
+
+
+  justify-content:center;
+
+
+
+  flex-wrap:wrap;
+
+
+
+  gap:20px;
+
+
+
+}
+
+
+
+/* TARJETAS */
+
+
+.servicio-card {
+
+
+  background:#f5f3ed;
+
+
+
+  width:220px;
+
+
+
+  min-height:180px;
+
+
+
+  padding:18px;
+
+
+
+  border-radius:18px;
+
+
+
+  box-shadow:
+
+  0 10px 25px rgba(0,0,0,.25);
+
+
+
+  transition:.35s;
+
+
+
+  position:relative;
+
+
+
+  overflow:hidden;
+
+
+
+}
+
+
+
+.servicio-card::before {
+
+
+  content:"";
+
+
+
+  position:absolute;
+
+
+
+  top:0;
+
+
+
+  left:0;
+
+
+
+  width:100%;
+
+
+
+  height:5px;
+
+
+
+  background:#C9BD86;
+
+
+
+}
+
+
+
+
+.servicio-card:hover {
+
+
+  transform:translateY(-8px);
+
+
+
+  box-shadow:
+
+  0 18px 35px rgba(201,189,134,.25);
+
+
+
+}
+
+
+
+.servicio-card h3 {
+
+
+  color:#827416;
+
+
+
+  font-size:1.1rem;
+
+
+
+  margin-bottom:18px;
+
+
+
+  text-align:center;
+
+
+
+}
+
+
+
+.servicio-card ul {
+
+
+  padding-left:18px;
+
+
+
+  margin:0;
+
+
+
+}
+
+
+
+.servicio-card li {
+
+
+  color:#444;
+
+
+
+  font-size:.85rem;
+
+
+
+  margin-bottom:8px;
+
+
+
+}
+
+
 
 /* ===================================================== */
 /* FOOTER */
 /* ===================================================== */
 
-.footer{
 
-background:#111;
+.footer {
 
-text-align:center;
 
-padding:10px;
+  background:#111;
 
-font-size:11px;
+
+
+  text-align:center;
+
+
+
+  padding:12px;
+
+
+
+  font-size:11px;
+
+
+
+  color:#ddd;
+
+
+
+}
+
+
+
+/* ===================================================== */
+/* RESPONSIVE */
+/* ===================================================== */
+
+
+@media(max-width:768px){
+
+
+
+.logo-text {
+
+
+ font-size:38px;
+
+
+}
+
+
+
+.slogan {
+
+
+ font-size:16px;
+
+
+}
+
+
+
+.buttons {
+
+
+ flex-direction:column;
+
+
+ align-items:center;
+
+
+}
+
+
+
+.btn-primary,
+.btn-cliente {
+
+
+ width:250px;
+
+
+}
+
+
+
+.servicio-card {
+
+
+ width:100%;
+
+
+ max-width:320px;
+
+
+}
+
+
 
 }

@@ -24,13 +24,11 @@ function Home() {
             <Link to="/login">
               <button className="btn-primary">Iniciar Sesión</button>
             </Link>
-           {/* <Link to="/registro">
-              <button className="btn-secondary">Registrarse</button>
-            </Link>*/}
-            <Link to="/servicios">
-              <button className="btn-secondary">Servicios</button>
-            </Link>
-            {/* 👤 NUEVO */}
+           {/*
+<Link to="/registro">
+  <button className="btn-secondary">Registrarse</button>
+</Link>
+*/}
             <Link to="/cliente/login">
               <button className="btn-cliente">Portal Cliente</button>
             </Link>
@@ -39,30 +37,61 @@ function Home() {
 
       </section>
 
-      <section className="services">
-        <h2>Servicios del Sistema</h2>
-        <div className="services-container">
-          <div className="card">
-            <h3>Facturación</h3>
-            <p>Genera facturas rápidas y seguras para tus clientes.</p>
+      {/* SERVICIOS */}
+      <section className="servicios">
+
+        <div className="servicios-grid">
+
+          <div className="servicio-card">
+            <h3>Facturación rápida</h3>
+
+            <ul>
+              <li>Crear facturas en segundos</li>
+              <li>Registro automático de ventas</li>
+              <li>Control de pagos</li>
+            </ul>
+
           </div>
-          <div className="card">
-            <h3>Inventario</h3>
-            <p>Controla productos y existencias en tiempo real.</p>
+
+          <div className="servicio-card">
+            <h3>Control de inventario</h3>
+
+            <ul>
+              <li>Administrar productos</li>
+              <li>Control de stock</li>
+              <li>Entradas y salidas de inventario</li>
+            </ul>
+
           </div>
-          <div className="card">
-            <h3>Clientes</h3>
-            <p>Administra la información completa de tus clientes.</p>
+
+          <div className="servicio-card">
+            <h3>Gestión de clientes</h3>
+
+            <ul>
+              <li>Registro de clientes</li>
+              <li>Historial de compras</li>
+              <li>Datos organizados</li>
+            </ul>
+
           </div>
-          <div className="card">
-            <h3>Reportes</h3>
-            <p>Obtén reportes claros sobre ventas y rendimiento.</p>
+
+          <div className="servicio-card">
+            <h3>Reportes inteligentes</h3>
+
+            <ul>
+              <li>Reportes de ventas</li>
+              <li>Análisis del negocio</li>
+              <li>Información para decisiones</li>
+            </ul>
+
           </div>
+
         </div>
+
       </section>
 
       <footer className="footer">
-        <p>Contacto: 3024698432</p>
+        <p>CONTACTO: 3024698432 / 3144571556</p>
         <p>2026 TODOS LOS DERECHOS RESERVADOS</p>
         <p>AUTORES: LUZ MERY JULIO - MONICA MEDINA</p>
       </footer>
