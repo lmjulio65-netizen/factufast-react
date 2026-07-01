@@ -9,8 +9,11 @@ function RecuperarClave() {
 
   const [usuario, setUsuario] = useState("");
   const [mostrarCambio, setMostrarCambio] = useState(false);
+  const [mostrarVerificacion, setMostrarVerificacion] = useState(false);
   const [claveNueva, setClaveNueva] = useState("");
   const [confirmarClave, setConfirmarClave] = useState("");
+  const [email, setEmail] = useState("");
+  const [usuarioEncontrado, setUsuarioEncontrado] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
@@ -29,9 +32,59 @@ function RecuperarClave() {
       return;
     }
 
+    // Buscar usuario en el sistema y pedir verificación por correo
+    fetch('http://localhost/factufast-api/usuarios/listar.php')
+      .then(res => res.json())
+      .then(data => {
+        const lista = Array.isArray(data) ? data : [];
+        const buscado = lista.find(u => (
+          String(u.nombre_usuario || '').toLowerCase() === usuario.trim().toLowerCase() ||
+          String(u.cedula_usuario || '') === usuario.trim() ||
+          String(u.correo_usuario || '').toLowerCase() === usuario.trim().toLowerCase()
+        ));
+
+        if (!buscado) {
+          setMensaje('Usuario no encontrado. Verifica el dato ingresado.');
+          setTipoMensaje('error');
+          return;
+        }
+
+        setUsuarioEncontrado(buscado);
+        setMostrarVerificacion(true);
+        setMensaje('Se encontró el usuario. Ingresa el correo registrado para verificar.');
+        setTipoMensaje('success');
+      })
+      .catch(() => {
+        setMensaje('Error conectando con el servidor.');
+        setTipoMensaje('error');
+      });
+  };
+
+  const verificarEmail = () => {
+    limpiarMensaje();
+
+    if (!usuarioEncontrado) {
+      setMensaje('No se encontró usuario para verificar.');
+      setTipoMensaje('error');
+      return;
+    }
+
+    if (!email.trim()) {
+      setMensaje('Ingresa el correo registrado.');
+      setTipoMensaje('error');
+      return;
+    }
+
+    if ((usuarioEncontrado.correo_usuario || '').toLowerCase() !== email.trim().toLowerCase()) {
+      setMensaje('El correo no coincide con el registrado para este usuario.');
+      setTipoMensaje('error');
+      return;
+    }
+
     setMostrarCambio(true);
-    setMensaje("Usuario ingresado. Ahora escribe tu nueva contraseña.");
-    setTipoMensaje("success");
+    setMostrarVerificacion(false);
+    setMensaje('Correo verificado. Ahora escribe tu nueva contraseña.');
+    setTipoMensaje('success');
   };
 
   const cambiarClave = async () => {
@@ -220,13 +273,22 @@ function RecuperarClave() {
             }}
           />
 
-          {!mostrarCambio && (
-            <button
-              onClick={verificarUsuario}
-              style={btnStyle}
-            >
-              Continuar
-            </button>
+          {!mostrarCambio && !mostrarVerificacion && (
+            <button onClick={verificarUsuario} style={btnStyle}>Continuar</button>
+          )}
+
+          {mostrarVerificacion && (
+            <>
+              <label style={labelStyle}>Correo registrado</label>
+              <input
+                type="email"
+                placeholder="Correo registrado"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={inputStyle}
+              />
+              <button onClick={verificarEmail} style={btnStyle}>Verificar correo</button>
+            </>
           )}
 
           {mostrarCambio && (
