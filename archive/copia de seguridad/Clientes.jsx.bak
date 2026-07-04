@@ -65,24 +65,12 @@ function Clientes(){
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.trim())) return "El correo no es válido.";
     if(!direccion.trim()) return "La dirección es obligatoria.";
     if(!ciudad.trim()) return "La ciudad es obligatoria.";
-    
-    // Validar que el documento no exista en otro cliente
-    const documentoExistente = clientes.find(c => 
-      c.nit_cliente === documento.trim() && 
-      c.id_cliente !== idEditar // Permitir el mismo documento si se está editando el mismo cliente
-    );
-    if(documentoExistente) {
-      return "Este número de documento ya existe en otro cliente.";
-    }
-    
     return "";
   }
 
   function registrarCliente(e){
 
     e.preventDefault();
-
-    if (!window.confirm("¿Estás seguro que deseas registrar este cliente?")) return;
 
     const error = validarCliente();
     if(error){
@@ -188,8 +176,6 @@ function Clientes(){
 
     e.preventDefault();
 
-    if (!window.confirm("¿Estás seguro que deseas actualizar este cliente?")) return;
-
     const error = validarCliente();
     if(error){
       alert(error);
@@ -266,7 +252,7 @@ function Clientes(){
 
     <div className="container">
 
-      {/* 🔥 BOTÓN VOLVER
+      {/* 🔥 BOTÓN VOLVER 
       <button onClick={() => navigate("/gerente")}>
         ⬅ Volver al Panel
       </button>*/}

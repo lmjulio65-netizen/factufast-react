@@ -118,7 +118,7 @@ const activas=facturas.filter(
 return{
 
 total_ventas:activas.reduce(
-(total,f)=>total+Number(f.total||0),0
+(total,f)=>total+Number(f.total_pagado ?? f.total ?? 0),0
 ),
 
 cantidad_facturas:activas.length
@@ -287,7 +287,7 @@ fecha:f.fecha_emision,
 
 cliente:f.nombre_cliente,
 
-total:Number(f.total||0),
+total:Number(f.total_pagado ?? f.total ?? 0),
 
 estado:f.estado||"ACTIVA"
 
@@ -534,7 +534,7 @@ Facturas del rango seleccionado
 
 
 <td>
-{formatoMoneda(f.total)}
+{formatoMoneda(f.total_pagado ?? f.total ?? 0)}
 </td>
 
 

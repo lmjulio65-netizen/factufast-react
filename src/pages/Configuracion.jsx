@@ -58,6 +58,16 @@ function Configuracion() {
       return false;
     }
 
+    // Validar que la cédula no exista en otro usuario
+    const cedulaExistente = usuarios.find(u => 
+      u.cedula_usuario === cedula.trim() && 
+      u.id_usuario !== idUsuario // Permitir la misma cédula si se está editando el mismo usuario
+    );
+    if(cedulaExistente) {
+      alert('Este número de cédula ya existe en otro usuario.');
+      return false;
+    }
+
     return true;
   };
 
@@ -98,19 +108,6 @@ function Configuracion() {
       .then((res) => res.json())
       .then(() => obtenerUsuarios())
       .catch(() => alert('Error eliminando usuario'));
-  };
-
-  const resetPassword = (id) => {
-    if (!window.confirm('Restablecer contrasena del usuario?')) return;
-
-    fetch(`http://localhost/factufast-api/usuarios/reset_password.php?id=${id}`)
-      .then((res) => res.json())
-      .then(() => {
-        alert(
-          'La contrasena del usuario fue restablecida.\n\nNueva contrasena temporal: 123456\n\nEl usuario debe cambiarla al ingresar.'
-        );
-      })
-      .catch(() => alert('Error restableciendo contrasena'));
   };
 
   const editarUsuario = (user) => {
@@ -303,14 +300,6 @@ function Configuracion() {
                         onClick={() => eliminarUsuario(user.id_usuario)}
                       >
                         Eliminar
-                      </button>
-
-                      <button
-                        type="button"
-                        className="btn-warning"
-                        onClick={() => resetPassword(user.id_usuario)}
-                      >
-                        Reset clave
                       </button>
                     </div>
                   </td>

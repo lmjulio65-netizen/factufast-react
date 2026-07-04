@@ -63,6 +63,16 @@ function Proveedores() {
       return false;
     }
 
+    // Validar que el NIT no exista en otro proveedor
+    const nitExistente = proveedores.find(p => 
+      p.NIT === nit.trim() && 
+      p.id_proveedor !== idProveedor // Permitir el mismo NIT si se está editando el mismo proveedor
+    );
+    if(nitExistente) {
+      alert('Este número de NIT ya existe en otro proveedor.');
+      return false;
+    }
+
     return true;
   };
 
@@ -88,10 +98,14 @@ function Proveedores() {
       body: JSON.stringify(datosProveedor()),
     })
       .then((res) => res.json())
-      .then(() => {
-        obtenerProveedores();
-        limpiarFormulario();
-        alert('Proveedor registrado');
+      .then((data) => {
+        if(data.error){
+          alert(data.error);
+        } else if(data.success){
+          obtenerProveedores();
+          limpiarFormulario();
+          alert('Proveedor registrado');
+        }
       })
       .catch(() => alert('Error conectando con el servidor'));
   };
@@ -107,11 +121,18 @@ function Proveedores() {
     return;
   }
 
-  if (!window.confirm('Eliminar proveedor?')) return;
+  if (!window.confirm('¿Eliminar proveedor?')) return;
 
   fetch(`http://localhost/factufast-api/proveedores/eliminar.php?id=${id}`)
     .then((res) => res.json())
-    .then(() => obtenerProveedores())
+    .then((data) => {
+      if(data.error){
+        alert(data.error);
+      } else if(data.success){
+        obtenerProveedores();
+        alert('Proveedor eliminado correctamente');
+      }
+    })
     .catch(() => alert('Error eliminando proveedor'));
 };
 
@@ -148,10 +169,14 @@ function Proveedores() {
       }),
     })
       .then((res) => res.json())
-      .then(() => {
-        obtenerProveedores();
-        limpiarFormulario();
-        alert('Proveedor actualizado');
+      .then((data) => {
+        if(data.error){
+          alert(data.error);
+        } else if(data.success){
+          obtenerProveedores();
+          limpiarFormulario();
+          alert('Proveedor actualizado');
+        }
       })
       .catch(() => alert('Error actualizando proveedor'));
   };

@@ -45,6 +45,25 @@ function FacturaAnular() {
 
   const total = subtotal + iva;
 
+  const cerrarVentana = () => {
+    if (window.opener) {
+      try {
+        window.opener.location.reload();
+      } catch (error) {
+        console.error("No se pudo recargar la ventana principal", error);
+      }
+    }
+
+    setTimeout(() => {
+      if (window.opener) {
+        window.close();
+        return;
+      }
+
+      navigate("/facturas");
+    }, 800);
+  };
+
   const anularFactura = async () => {
     if (factura.estado === "ANULADA") {
       alert("Esta factura ya está anulada");
@@ -61,9 +80,7 @@ function FacturaAnular() {
       if (data.success) {
         setFactura({ ...factura, estado: "ANULADA" });
         alert(data.mensaje || "Factura anulada correctamente");
-        setTimeout(() => {
-          navigate("/facturas");
-        }, 1000);
+        cerrarVentana();
       } else {
         alert(data.error || "No se pudo anular");
       }
