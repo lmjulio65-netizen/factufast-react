@@ -10,6 +10,7 @@ function Inventario() {
   const [historial,setHistorial] = useState([]);
 
   const [producto,setProducto] = useState("");
+  const [productoTexto,setProductoTexto] = useState("");
   const [cantidad,setCantidad] = useState("");
   const [tipo,setTipo] = useState("entrada");
 
@@ -22,13 +23,16 @@ function Inventario() {
   const [fechaInicio,setFechaInicio] = useState("");
   const [fechaFin,setFechaFin] = useState("");
   const [busqueda,setBusqueda] = useState("");
+  const [sugerencias,setSugerencias] = useState([]);
 
 
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const rol = usuario.rol || "";
 
   const esEmpleado = rol === "Empleado";
+  const esGerente = rol === "Gerente 1";
   const puedeModificar = !esEmpleado;
+  const puedeEditarHistorial = esGerente || rol === "Administrador";
 
 
 
@@ -68,9 +72,10 @@ function Inventario() {
 
 
 
-  const seleccionarProducto = (id)=>{
+  const seleccionarProducto = (id, nombre = "")=>{
 
     setProducto(id);
+    setProductoTexto(nombre);
 
     const prod = productos.find(
       p=>String(p.id_productos) === String(id)
@@ -95,6 +100,34 @@ function Inventario() {
 
     }
 
+  };
+
+  const manejarCambioProducto = (valor) => {
+    setProductoTexto(valor);
+
+    if (!valor) {
+      setProducto("");
+      setPrecioCompra("");
+      setPrecioVenta("");
+      setSugerencias([]);
+      return;
+    }
+
+    const texto = valor.toLowerCase();
+    const filtradas = productos.filter((p) =>
+      String(p.nombre_producto || "")
+        .toLowerCase()
+        .includes(texto)
+    );
+
+    setSugerencias(filtradas.slice(0, 6));
+
+    const prod = filtradas[0];
+    if (prod && String(prod.nombre_producto || "").toLowerCase() === texto) {
+      seleccionarProducto(prod.id_productos, prod.nombre_producto);
+    } else {
+      setProducto("");
+    }
   };
 
 
@@ -322,6 +355,7 @@ function Inventario() {
   const limpiarFormulario=()=>{
 
     setProducto("");
+    setProductoTexto("");
 
     setCantidad("");
 
@@ -505,31 +539,57 @@ return(
 <form onSubmit={idMovimiento ? actualizarMovimiento : guardarMovimiento}>
 
 
-<select
-value={producto}
-onChange={(e)=>seleccionarProducto(e.target.value)}
->
+<div style={{ width:"100%", maxWidth:"320px", marginBottom:"10px", position:"relative" }}>
+  <input
+    type="text"
+    placeholder="Escribe el nombre del producto"
+    value={productoTexto}
+    onChange={(e) => manejarCambioProducto(e.target.value)}
+    style={{
+      width:"100%",
+      padding:"10px 12px",
+      border:"1px solid #cbd5e1",
+      borderRadius:"8px",
+      outline:"none",
+      boxShadow:"0 1px 2px rgba(15, 23, 42, 0.06)",
+      boxSizing:"border-box"
+    }}
+  />
 
-<option value="">
-Seleccione producto
-</option>
-
-
-{productos.map(p=>(
-
-<option
-key={p.id_productos}
-value={p.id_productos}
->
-
-{p.nombre_producto}
-
-</option>
-
-))}
-
-
-</select>
+  {sugerencias.length > 0 && (
+    <div style={{
+      position:"absolute",
+      top:"calc(100% + 2px)",
+      left:0,
+      right:0,
+      zIndex:20,
+      border:"1px solid #e2e8f0",
+      background:"#fff",
+      maxHeight:"160px",
+      overflowY:"auto",
+      borderRadius:"8px",
+      boxShadow:"0 8px 18px rgba(15, 23, 42, 0.12)"
+    }}>
+      {sugerencias.map((p) => (
+        <div
+          key={p.id_productos}
+          onClick={() => seleccionarProducto(p.id_productos, p.nombre_producto)}
+          style={{
+            padding:"10px 12px",
+            cursor:"pointer",
+            borderBottom:"1px solid #f8fafc",
+            background:"#fff"
+          }}
+        >
+          <strong style={{ display:"block", color:"#0f172a" }}>{p.nombre_producto}</strong>
+          <span style={{ fontSize:"12px", color:"#64748b" }}>
+            {p.stock != null ? `Stock: ${p.stock}` : "Producto disponible"}
+          </span>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
 
 
 
@@ -647,7 +707,7 @@ style={{
 <th>Fecha</th>
 
 
-{puedeModificar && <th>Acciones</th>}
+{puedeEditarHistorial && <th>Acciones</th>}
 
 </tr>
 
@@ -710,7 +770,7 @@ ${ganancia.toLocaleString("es-CO")}
 
 
 
-{puedeModificar && (
+{puedeEditarHistorial && mov.tipo_movimiento !== "salida" && (
 
 <td>
 
@@ -731,6 +791,12 @@ Eliminar
 
 </td>
 
+)}
+
+{puedeEditarHistorial && mov.tipo_movimiento === "salida" && (
+  <td>
+    <span style={{ color: "#64748b", fontSize: "12px" }}>Protegido</span>
+  </td>
 )}
 
 
