@@ -46,6 +46,12 @@ function FacturaVista() {
 
   const descargarPDF = () => {
     const input = document.getElementById("factura");
+    const botones = document.querySelector(".botones");
+    const botonesDisplay = botones ? botones.style.display : null;
+
+    if (botones) {
+      botones.style.display = "none";
+    }
 
     html2canvas(input, { scale: 2 }).then(canvas => {
       const imgData = canvas.toDataURL("image/png");
@@ -70,6 +76,10 @@ function FacturaVista() {
       }
 
       pdf.save(`factura-${id}.pdf`);
+    }).finally(() => {
+      if (botones) {
+        botones.style.display = botonesDisplay || "flex";
+      }
     });
   };
 
@@ -232,7 +242,7 @@ function FacturaVista() {
       </p>
 
       {/* BOTONES */}
-      <div style={{ marginTop: "20px", display: "flex", gap: "10px", flexDirection: "column" }}>
+      <div className="botones" style={{ marginTop: "20px", display: "flex", gap: "10px", flexDirection: "column" }}>
         <div style={{ display: "flex", gap: "10px" }}>
           <button onClick={imprimir}>🖨 Imprimir</button>
           <button onClick={descargarPDF}>📄 Descargar PDF</button>

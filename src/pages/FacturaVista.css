@@ -73,12 +73,22 @@
 .botones button {
   padding: 10px 15px;
   border: none;
-  background: #2563eb;
-  color: white;
+  background: #C9BD86;
+  color: #1a1a1a;
   cursor: pointer;
   border-radius: 5px;
 }
 
 .botones button:hover {
+  background: #b9a360;
+}
+
+.botones button:hover {
   background: #1d4ed8;
+}
+
+@media print {
+  .botones {
+    display: none !important;
+  }
 }

@@ -14,6 +14,8 @@ const navigate = useNavigate();
 const [usuario, setUsuario] = useState("");
 const [clave, setClave] = useState("");
 const [confirmarClave, setConfirmarClave] = useState("");
+const [verClave, setVerClave] = useState(false);
+const [verConfirmar, setVerConfirmar] = useState(false);
 
 const [mensaje, setMensaje] = useState("");
 const [tipoMensaje, setTipoMensaje] = useState("");
@@ -50,6 +52,24 @@ const inputStyle = {
 
 };
 
+const inputContainerStyle = {
+  position: "relative",
+  width: "100%",
+  marginBottom: "14px"
+};
+
+const ojoBtnStyle = {
+  position: "absolute",
+  right: "10px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  background: "none",
+  border: "none",
+  color: "#C9BD86",
+  cursor: "pointer",
+  fontSize: "12px",
+  fontWeight: "bold"
+};
 
 
 const btnStyle = {
@@ -399,25 +419,22 @@ Crear contraseña
 
 </label>
 
-
-<input
-
-type="password"
-
-placeholder="Ingrese la contraseña"
-
-value={clave}
-
-onChange={(e)=>setClave(e.target.value)}
-
-style={inputStyle}
-
-/>
-
-
-
-
-
+<div style={inputContainerStyle}>
+  <input
+    type={verClave ? "text" : "password"}
+    placeholder="Ingrese la contraseña"
+    value={clave}
+    onChange={(e)=>setClave(e.target.value)}
+    style={{ ...inputStyle, paddingRight: "75px" }}
+  />
+  <button
+    type="button"
+    onClick={() => setVerClave(!verClave)}
+    style={ojoBtnStyle}
+  >
+    {verClave ? "Ocultar" : "Mostrar"}
+  </button>
+</div>
 
 <label style={labelStyle}>
 
@@ -425,20 +442,22 @@ Confirmar contraseña
 
 </label>
 
-
-<input
-
-type="password"
-
-placeholder="Repita la contraseña"
-
-value={confirmarClave}
-
-onChange={(e)=>setConfirmarClave(e.target.value)}
-
-style={inputStyle}
-
-/>
+<div style={inputContainerStyle}>
+  <input
+    type={verConfirmar ? "text" : "password"}
+    placeholder="Repita la contraseña"
+    value={confirmarClave}
+    onChange={(e)=>setConfirmarClave(e.target.value)}
+    style={{ ...inputStyle, paddingRight: "75px" }}
+  />
+  <button
+    type="button"
+    onClick={() => setVerConfirmar(!verConfirmar)}
+    style={ojoBtnStyle}
+  >
+    {verConfirmar ? "Ocultar" : "Mostrar"}
+  </button>
+</div>
 
 
 
